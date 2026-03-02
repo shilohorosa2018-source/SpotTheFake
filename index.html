@@ -100,9 +100,9 @@ button:hover {
   left:50%;
   transform: translate(-50%, -50%);
   background: #fffbee;
-  padding: 40px 30px;
+  padding: 40px 35px;
   border-radius: 16px;
-  max-width: 400px;
+  max-width: 420px;
   width: 90%;
   text-align: center;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
@@ -114,21 +114,34 @@ button:hover {
 #nicknameCard.show { opacity: 1; }
 
 #nicknameCard h2 {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   color: #2c3e50;
+  font-weight: 700;
 }
 
-#nicknameCard input[type="text"],
-#nicknameCard input[type="range"] {
-  width: 80%;
+#nicknameCard input[type="text"] {
+  width: 85%;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #ccc;
-  margin-bottom: 20px;
-  font-size: 16px;
+  margin-bottom: 25px;
+  font-size: 17px;
 }
 
-#nicknameCard button { width: 60%; }
+#nicknameCard select {
+  width: 85%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 25px;
+  font-size: 17px;
+  font-family: 'Playfair Display', serif;
+  cursor: pointer;
+}
+
+#nicknameCard select option {
+  font-family: 'Playfair Display', serif;
+}
 
 /* ---------------- GAME CONTAINER ---------------- */
 .container {
@@ -230,11 +243,16 @@ h1, h2 {
 
 <!-- Nickname Card -->
 <div id="nicknameCard">
-  <h2>Enter Your Nickname</h2>
-  <input type="text" id="nickname" placeholder="Nickname"><br>
-  <label>How confident are you? (1–100%)</label><br>
-  <input type="range" id="confidence" min="1" max="100" value="50">
-  <p id="confidenceValue">50%</p><br>
+  <h2>Let's Get Started</h2>
+  <input type="text" id="nickname" placeholder="Enter your nickname"><br>
+  <label for="confidenceSelect">How confident are you in spotting AI-generated images?</label><br>
+  <select id="confidenceSelect">
+    <option value="1">Not confident</option>
+    <option value="2">Somewhat confident</option>
+    <option value="3" selected>Confident</option>
+    <option value="4">Very confident</option>
+    <option value="5">Expert</option>
+  </select><br>
   <button onclick="startPhase()">Start</button>
 </div>
 
@@ -271,11 +289,6 @@ h1, h2 {
 </div>
 
 <script>
-/* Slider Display */
-document.getElementById("confidence").addEventListener('input', function(){
-  document.getElementById("confidenceValue").innerText = this.value + "%";
-});
-
 /* Show nickname card */
 function showNicknameCard(){
   document.getElementById('welcomePage').style.display = 'none';
@@ -311,7 +324,7 @@ function loadRound(){
   document.getElementById("feedback").classList.add("hidden");
   document.getElementById("nextBtn").classList.add("hidden");
   document.getElementById("phaseTitle").innerText = phase === 1 ? "Phase 1" : "Phase 2 - Learning Mode";
-  document.getElementById("roundInfo")?.remove(); // remove old round info
+
   const progress = document.getElementById("progressBar");
   progress.style.width = ((currentRound+1)/rounds.length)*100 + "%";
 
@@ -381,5 +394,6 @@ function finish(){
   thankyou.classList.add("show");
 }
 </script>
+
 </body>
 </html>
