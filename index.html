@@ -3,305 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <title>Spot The Fake</title>
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+/* Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; font-family:'Inter', sans-serif; background:#000; overflow:hidden; }
 
-/* Global */
-body, html {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', sans-serif;
-  height: 100%;
-  overflow: hidden;
-}
+/* Background Layers */
+#background { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2; overflow:hidden; }
+#bgImage { position:absolute; top:0; left:0; width:100%; height:100%; background:url('/mnt/data/5ded1975-7eb0-4e70-9ec0-ef41f5bc6028.png') center/cover no-repeat; animation: zoomSlow 60s linear infinite; }
+#stars { position:absolute; width:200%; height:200%; background:radial-gradient(white 0.5px, transparent 1px); background-size:10px 10px; opacity:0.2; animation: moveStars 120s linear infinite, twinkle 3s ease-in-out infinite; }
+#clouds { position:absolute; width:200%; height:200%; background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 70%); animation: moveClouds 180s linear infinite alternate; }
 
-/* Welcome background */
-#welcome {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: url('YOUR_IMAGE_URL_HERE') no-repeat center center;
-  background-size: cover;
-  transition: opacity 0.8s ease;
-  z-index: 2;
-}
+/* Animations */
+@keyframes zoomSlow { 0%{transform:scale(1);} 50%{transform:scale(1.02);} 100%{transform:scale(1);} }
+@keyframes moveStars { 0%{transform:translate(0,0);} 100%{transform:translate(-50%,-50%);} }
+@keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:0.5;} }
+@keyframes moveClouds { 0%{transform:translate(0,0);} 100%{transform:translate(-10%,-10%);} }
+@keyframes slideUp { 0%{opacity:0; transform:translateY(30px);} 100%{opacity:1; transform:translateY(0);} }
+@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+@keyframes fadeOut { to{opacity:0; transform:translateY(-20px);} }
 
-#welcome.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+/* Welcome Card */
+#welcome { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; }
+.card { position:relative; z-index:1; background:rgba(0,0,0,0.75); padding:50px; border-radius:20px; text-align:center; color:#fff; box-shadow:0 20px 50px rgba(0,0,0,0.6); max-width:600px; width:90%; animation:slideUp 1s ease forwards, float 6s ease-in-out infinite; transition: all 0.6s ease; }
+.card h1 { font-size:2.5rem; margin-bottom:20px; }
+.card p { font-size:1.1rem; margin-bottom:30px; color:#ddd; }
+.card input[type="text"] { width:80%; padding:12px 15px; margin-bottom:20px; border-radius:12px; border:none; font-size:16px; outline:none; }
+.card button { background:#4c6ef5; color:white; padding:12px 25px; border-radius:12px; border:none; font-size:16px; cursor:pointer; transition:all 0.3s ease; }
+.card button:hover { background:#364fc7; transform:translateY(-2px); }
+.tip-card { margin-top:20px; background:rgba(255,255,255,0.05); padding:15px 20px; border-radius:12px; font-size:0.95rem; color:#ccc; animation:float 6s ease-in-out infinite; }
 
-/* Card overlay */
-.card {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 700px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
+/* Training Slideshow */
+#training { display:none; flex-direction:column; justify-content:center; align-items:center; height:100%; width:100%; position:fixed; top:0; left:0; background:rgba(0,0,0,0.85); padding:20px; overflow:auto; text-align:center; }
+.training-image { max-width:80%; border-radius:20px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition: transform 0.3s ease; }
+.training-image:hover { transform: scale(1.02); }
+.training-tip { max-width:80%; text-align:left; color:#eee; font-size:1rem; margin-bottom:20px; background:rgba(255,255,255,0.05); padding:15px 20px; border-radius:12px; }
 
-/* Headings */
-h1, h2 {
-  margin-bottom: 15px;
-  color: #1f2d3d;
-}
+/* Buttons */
+.guess-btn, .phase-btn { background:#4c6ef5; color:white; border:none; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:16px; margin:5px; transition:all 0.3s ease; }
+.guess-btn:hover, .phase-btn:hover { background:#364fc7; transform:translateY(-2px); }
 
-.subtitle {
-  margin-bottom: 30px;
-  color: #6b7c93;
-  font-size: 1.2rem;
-}
+/* Fade-out class */
+.fade-out { animation: fadeOut 0.8s forwards; }
 
-/* Inputs */
-input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #dce3ec;
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-input[type="range"] {
-  width: 100%;
-}
-
-/* Button */
-button {
-  background: #4c6ef5;
-  color: white;
-  padding: 12px 25px;
-  border-radius: 12px;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: #364fc7;
-  transform: translateY(-2px);
-}
-
-/* Game and results screens */
-#game, #results, #thanks {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
-}
-
-.images {
-  display: flex;
-  gap: 20px;
-  margin-top: 25px;
-}
-
-.images img {
-  width: 50%;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: 0.3s;
-  border: 3px solid transparent;
-}
-
-.images img:hover {
-  transform: scale(1.03);
-  border-color: #4c6ef5;
-}
-
-.tip {
-  margin-top: 20px;
-  padding: 15px;
-  background: #edf2ff;
-  border-radius: 12px;
-  color: #364fc7;
-}
-
-.progress {
-  text-align: center;
-  margin-top: 10px;
-  color: #6b7c93;
-}
-
-.results-box {
-  background: #f8f9ff;
-  padding: 20px;
-  border-radius: 15px;
-  margin-top: 20px;
-}
-
-.center { text-align: center; margin-top: 20px; }
+/* Dropdown Tip Style */
+.dropdown-tip { margin-bottom:20px; cursor:pointer; background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:10px; color:#ccc; font-size:0.95rem; }
+.dropdown-content { display:none; padding:10px 15px; background:rgba(255,255,255,0.1); border-radius:10px; color:#eee; margin-top:5px; font-size:0.9rem; }
 </style>
 </head>
-
 <body>
 
-<!-- Welcome Screen -->
+<!-- Background -->
+<div id="background">
+  <div id="bgImage"></div>
+  <div id="stars"></div>
+  <div id="clouds"></div>
+</div>
+
+<!-- Welcome Card -->
 <div id="welcome">
   <div class="card">
-    <h1>Can You Spot the Fake?</h1>
-    <p class="subtitle">Train your eye to detect AI-generated images and improve your digital literacy.</p>
-    
-    <input type="text" id="nickname" placeholder="Enter your nickname">
-    
-    <label>How confident are you? (<span id="confValue">50</span>%)</label>
-    <input type="range" id="confidence" min="1" max="100" value="50"><br><br>
-    
-    <button onclick="startGame()">Start Training</button>
+    <h1>Welcome to Spot The Fake</h1>
+    <p>Train your eye to detect AI-generated images and sharpen your observation skills.</p>
+    <input type="text" placeholder="Enter your nickname">
+    <br>
+    <button id="startBtn">Start Training</button>
+    <div class="tip-card" id="welcomeTip">Tip: Look closely at irregular textures and inconsistent lighting.</div>
   </div>
 </div>
 
-<!-- Game Screen -->
-<div id="game">
-  <div class="card">
-    <h2 id="phaseTitle"></h2>
-    <div class="progress" id="roundInfo"></div>
-    
-    <div class="images">
-      <img id="img1" onclick="choose(0)">
-      <img id="img2" onclick="choose(1)">
-    </div>
-    
-    <div id="feedback" class="tip hidden"></div>
-    
-    <div class="center">
-      <button id="nextBtn" class="hidden" onclick="next()">Next Round</button>
-    </div>
+<!-- Training Slideshow -->
+<div id="training">
+  <img src="" class="training-image" id="slideImage" alt="Training Image">
+  <div class="training-tip" id="slideTip"></div>
+  <div>
+    <button class="guess-btn" id="aiBtn">AI</button>
+    <button class="guess-btn" id="realBtn">Real</button>
   </div>
-</div>
-
-<!-- Results Screen -->
-<div id="results">
-  <div class="card">
-    <h2>Results</h2>
-    <div class="results-box" id="resultText"></div>
-    
-    <h3 class="center">Final Survey</h3>
-    
-    <label>How confident are you now? (<span id="finalConfValue">50</span>%)</label>
-    <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
-    
-    <label>How helpful was this site? (1–5)</label>
-    <input type="number" id="rating" min="1" max="5"><br><br>
-    
-    <div class="center">
-      <button onclick="finish()">Submit</button>
-    </div>
-  </div>
-</div>
-
-<!-- Thank You Screen -->
-<div id="thanks" class="center">
-  <div class="card">
-    <h2>Thank You!</h2>
-    <p>We hope you’ve become more confident at identifying AI-generated images.</p>
-  </div>
+  <div id="phaseMessage" style="margin-top:20px; color:#ccc; font-size:0.95rem;"></div>
 </div>
 
 <script>
-const rounds = [
-  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:0, tip:"AI often struggles with realistic hands, shadows, and fine background details."},
-  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:1, tip:"Look for unnatural lighting or overly smooth textures."},
-  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:0, tip:"Check symmetry and repeated patterns."},
-  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:1, tip:"Zoom in mentally for distorted small elements."},
-  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:0, tip:"Watch for warped text or background artifacts."}
-];
+// Nickname & Start
+const startBtn = document.getElementById('startBtn');
+const nicknameInput = document.querySelector('input[type="text"]');
+const welcomeDiv = document.getElementById('welcome');
+const trainingDiv = document.getElementById('training');
+const slideImage = document.getElementById('slideImage');
+const slideTip = document.getElementById('slideTip');
+const aiBtn = document.getElementById('aiBtn');
+const realBtn = document.getElementById('realBtn');
+const phaseMessage = document.getElementById('phaseMessage');
 
-let phase = 1;
-let round = 0;
-let score1 = 0;
-let score2 = 0;
-let name = "";
+let nickname = '';
+let currentPhase = 1;
+let currentIndex = 0;
+let userResponses = [];
 
-document.getElementById("confidence").oninput = function() {
-  document.getElementById("confValue").innerText = this.value;
+// Editable data: add images & tips here
+const phaseData = {
+  1: [
+    { img:'/mnt/data/image1.png', tip:'Check for unnatural shadows.', isAI:true },
+    { img:'/mnt/data/image2.png', tip:'Look at the eyes and facial details.', isAI:false },
+    { img:'/mnt/data/image3.png', tip:'Textures can be inconsistent in AI images.', isAI:true }
+  ],
+  2: [
+    { img:'/mnt/data/image4.png', tip:'Notice reflections in glasses and water.', isAI:true },
+    { img:'/mnt/data/image5.png', tip:'Look at hair and small details.', isAI:false },
+    { img:'/mnt/data/image6.png', tip:'Check lighting consistency.', isAI:true }
+  ]
 };
 
-document.getElementById("finalConfidence").oninput = function() {
-  document.getElementById("finalConfValue").innerText = this.value;
-};
-
-function startGame() {
-  name = document.getElementById("nickname").value || "Participant";
-  
-  // Fade out welcome
-  const welcome = document.getElementById("welcome");
-  welcome.classList.add("hidden");
-  
-  // Show game after fade
+// Start Button
+startBtn.addEventListener('click', () => {
+  nickname = nicknameInput.value.trim();
+  if(!nickname) return alert('Please enter your nickname!');
+  localStorage.setItem('nickname', nickname);
+  welcomeDiv.classList.add('fade-out');
   setTimeout(() => {
-    document.getElementById("game").style.display = "flex";
-    loadRound();
+    welcomeDiv.style.display = 'none';
+    trainingDiv.style.display = 'flex';
+    currentPhase = 1;
+    currentIndex = 0;
+    userResponses = [];
+    showSlide();
+    phaseMessage.innerText = `Phase ${currentPhase} of 2`;
   }, 800);
+});
+
+// Show slide
+function showSlide(){
+  const data = phaseData[currentPhase];
+  slideImage.src = data[currentIndex].img;
+  slideTip.innerHTML = `<div class="dropdown-tip">Tip (click to see)<div class="dropdown-content">${data[currentIndex].tip}</div></div>`;
+  addDropdownListener();
 }
 
-function loadRound() {
-  document.getElementById("feedback").classList.add("hidden");
-  document.getElementById("nextBtn").classList.add("hidden");
-
-  document.getElementById("phaseTitle").innerText = phase === 1 ? "Phase 1" : "Phase 2 – Learning Mode";
-  document.getElementById("roundInfo").innerText = "Round " + (round+1) + " of 5";
-
-  document.getElementById("img1").src = rounds[round].images[0];
-  document.getElementById("img2").src = rounds[round].images[1];
-}
-
-function choose(choice) {
-  const feedback = document.getElementById("feedback");
-  feedback.classList.remove("hidden");
-
-  if(choice === rounds[round].correct) {
-    feedback.innerText = "Correct! " + rounds[round].tip;
-    if(phase === 1) score1++; else score2++;
-  } else {
-    feedback.innerText = "Not quite. " + rounds[round].tip;
+// Dropdown tip toggle
+function addDropdownListener(){
+  const dropdown = document.querySelector('.dropdown-tip');
+  const content = dropdown.querySelector('.dropdown-content');
+  dropdown.onclick = () => {
+    content.style.display = content.style.display === 'block' ? 'none' : 'block';
   }
-
-  document.getElementById("nextBtn").classList.remove("hidden");
 }
 
-function next() {
-  round++;
-  if(round < 5) {
-    loadRound();
-  } else {
-    if(phase === 1) {
-      phase = 2;
-      round = 0;
-      loadRound();
+// Handle guess
+function handleGuess(isAISelected){
+  const data = phaseData[currentPhase];
+  const correct = data[currentIndex].isAI === isAISelected;
+  userResponses.push(correct);
+  currentIndex++;
+  if(currentIndex >= data.length){
+    const accuracy = Math.round(userResponses.filter(r=>r).length / userResponses.length * 100);
+    if(currentPhase < 2){
+      alert(`Phase ${currentPhase} complete! Accuracy: ${accuracy}%`);
+      currentPhase++;
+      currentIndex = 0;
+      userResponses = [];
+      phaseMessage.innerText = `Phase ${currentPhase} of 2`;
+      showSlide();
     } else {
-      showResults();
+      alert(`Phase ${currentPhase} complete! Accuracy: ${accuracy}%\nTraining Complete!`);
+      trainingDiv.innerHTML = `<h2 style="color:#fff;">Well done ${nickname}! You completed all phases.</h2>`;
     }
+  } else {
+    showSlide();
   }
 }
 
-function showResults() {
-  document.getElementById("game").style.display = "none";
-  document.getElementById("results").style.display = "flex";
-
-  let improvement = (score2 - score1) * 20;
-
-  document.getElementById("resultText").innerHTML =
-    "<strong>" + name + "</strong><br><br>" +
-    "Phase 1 Accuracy: " + (score1*20) + "%<br>" +
-    "Phase 2 Accuracy: " + (score2*20) + "%<br>" +
-    "Improvement: " + improvement + "%";
-}
-
-function finish() {
-  document.getElementById("results").style.display = "none";
-  document.getElementById("thanks").style.display = "flex";
-}
+aiBtn.addEventListener('click', ()=>handleGuess(true));
+realBtn.addEventListener('click', ()=>handleGuess(false));
 </script>
 
 </body>
