@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Spot The Fake</title>
@@ -7,53 +7,78 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-body {
+/* Global */
+body, html {
   margin: 0;
+  padding: 0;
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #eef2f7, #e3ebf5);
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Welcome background */
+#welcome {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
-  padding: 40px 20px;
+  align-items: center;
+  background: url('YOUR_IMAGE_URL_HERE') no-repeat center center;
+  background-size: cover;
+  transition: opacity 0.8s ease;
+  z-index: 2;
 }
 
+#welcome.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Card overlay */
 .card {
-  background: white;
-  width: 100%;
-  max-width: 900px;
-  padding: 40px;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-  transition: 0.3s;
+  padding: 40px;
+  max-width: 700px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
+/* Headings */
 h1, h2 {
-  text-align: center;
+  margin-bottom: 15px;
   color: #1f2d3d;
-  margin-bottom: 10px;
 }
 
 .subtitle {
-  text-align: center;
-  color: #6b7c93;
   margin-bottom: 30px;
+  color: #6b7c93;
+  font-size: 1.2rem;
 }
 
+/* Inputs */
 input[type="text"] {
   width: 100%;
   padding: 12px;
   border-radius: 10px;
   border: 1px solid #dce3ec;
   font-size: 16px;
+  margin-bottom: 20px;
 }
 
 input[type="range"] {
   width: 100%;
 }
 
+/* Button */
 button {
   background: #4c6ef5;
   color: white;
-  padding: 12px 22px;
+  padding: 12px 25px;
   border-radius: 12px;
   border: none;
   font-size: 16px;
@@ -64,6 +89,15 @@ button {
 button:hover {
   background: #364fc7;
   transform: translateY(-2px);
+}
+
+/* Game and results screens */
+#game, #results, #thanks {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
 }
 
 .images {
@@ -106,66 +140,72 @@ button:hover {
   margin-top: 20px;
 }
 
-.hidden { display: none; }
 .center { text-align: center; margin-top: 20px; }
 </style>
 </head>
 
 <body>
-<div class="card">
 
+<!-- Welcome Screen -->
 <div id="welcome">
-  <h1>Spot The Fake</h1>
-  <p class="subtitle">Test and improve your ability to detect AI-generated images</p>
-  
-  <input type="text" id="nickname" placeholder="Enter your nickname"><br><br>
-  
-  <label>How confident are you? (<span id="confValue">50</span>%)</label>
-  <input type="range" id="confidence" min="1" max="100" value="50"><br><br>
-  
-  <div class="center">
-    <button onclick="startGame()">Begin</button>
+  <div class="card">
+    <h1>Can You Spot the Fake?</h1>
+    <p class="subtitle">Train your eye to detect AI-generated images and improve your digital literacy.</p>
+    
+    <input type="text" id="nickname" placeholder="Enter your nickname">
+    
+    <label>How confident are you? (<span id="confValue">50</span>%)</label>
+    <input type="range" id="confidence" min="1" max="100" value="50"><br><br>
+    
+    <button onclick="startGame()">Start Training</button>
   </div>
 </div>
 
-<div id="game" class="hidden">
-  <h2 id="phaseTitle"></h2>
-  <div class="progress" id="roundInfo"></div>
-  
-  <div class="images">
-    <img id="img1" onclick="choose(0)">
-    <img id="img2" onclick="choose(1)">
-  </div>
-  
-  <div id="feedback" class="tip hidden"></div>
-  
-  <div class="center">
-    <button id="nextBtn" class="hidden" onclick="next()">Next Round</button>
-  </div>
-</div>
-
-<div id="results" class="hidden">
-  <h2>Results</h2>
-  <div class="results-box" id="resultText"></div>
-  
-  <h3 class="center">Final Survey</h3>
-  
-  <label>How confident are you now? (<span id="finalConfValue">50</span>%)</label>
-  <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
-  
-  <label>How helpful was this site? (1–5)</label>
-  <input type="number" id="rating" min="1" max="5"><br><br>
-  
-  <div class="center">
-    <button onclick="finish()">Submit</button>
+<!-- Game Screen -->
+<div id="game">
+  <div class="card">
+    <h2 id="phaseTitle"></h2>
+    <div class="progress" id="roundInfo"></div>
+    
+    <div class="images">
+      <img id="img1" onclick="choose(0)">
+      <img id="img2" onclick="choose(1)">
+    </div>
+    
+    <div id="feedback" class="tip hidden"></div>
+    
+    <div class="center">
+      <button id="nextBtn" class="hidden" onclick="next()">Next Round</button>
+    </div>
   </div>
 </div>
 
-<div id="thanks" class="hidden center">
-  <h2>Thank You!</h2>
-  <p>We hope you’ve become more confident at identifying AI-generated images.</p>
+<!-- Results Screen -->
+<div id="results">
+  <div class="card">
+    <h2>Results</h2>
+    <div class="results-box" id="resultText"></div>
+    
+    <h3 class="center">Final Survey</h3>
+    
+    <label>How confident are you now? (<span id="finalConfValue">50</span>%)</label>
+    <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
+    
+    <label>How helpful was this site? (1–5)</label>
+    <input type="number" id="rating" min="1" max="5"><br><br>
+    
+    <div class="center">
+      <button onclick="finish()">Submit</button>
+    </div>
+  </div>
 </div>
 
+<!-- Thank You Screen -->
+<div id="thanks" class="center">
+  <div class="card">
+    <h2>Thank You!</h2>
+    <p>We hope you’ve become more confident at identifying AI-generated images.</p>
+  </div>
 </div>
 
 <script>
@@ -193,9 +233,16 @@ document.getElementById("finalConfidence").oninput = function() {
 
 function startGame() {
   name = document.getElementById("nickname").value || "Participant";
-  document.getElementById("welcome").classList.add("hidden");
-  document.getElementById("game").classList.remove("hidden");
-  loadRound();
+  
+  // Fade out welcome
+  const welcome = document.getElementById("welcome");
+  welcome.classList.add("hidden");
+  
+  // Show game after fade
+  setTimeout(() => {
+    document.getElementById("game").style.display = "flex";
+    loadRound();
+  }, 800);
 }
 
 function loadRound() {
@@ -239,8 +286,8 @@ function next() {
 }
 
 function showResults() {
-  document.getElementById("game").classList.add("hidden");
-  document.getElementById("results").classList.remove("hidden");
+  document.getElementById("game").style.display = "none";
+  document.getElementById("results").style.display = "flex";
 
   let improvement = (score2 - score1) * 20;
 
@@ -252,8 +299,8 @@ function showResults() {
 }
 
 function finish() {
-  document.getElementById("results").classList.add("hidden");
-  document.getElementById("thanks").classList.remove("hidden");
+  document.getElementById("results").style.display = "none";
+  document.getElementById("thanks").style.display = "flex";
 }
 </script>
 
