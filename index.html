@@ -4,22 +4,22 @@
 <meta charset="UTF-8">
 <title>Spot the Fake</title>
 
-<!-- Formal Cute Font -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<!-- Playfair Display Font -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 /* Reset */
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Playfair Display', serif;
   overflow-x: hidden;
+  background: #fefcf2;
+  color: #2c3e50;
 }
 
 /* ---------------- WELCOME PAGE ---------------- */
-
 #welcomePage {
   background: url('https://i.pinimg.com/originals/8f/be/d3/8fbed3ddce989bcdc881c92c4c7f4457.gif') no-repeat center center/cover;
   width: 100%;
@@ -28,20 +28,18 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   text-align: center;
+  color: white;
 }
 
-/* Overlay */
 #welcomePage::before {
   content: '';
   position: absolute;
   top:0; left:0;
   width:100%; height:100%;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.55);
 }
 
-/* Pale Yellow Glass Card */
 .welcome-content {
   position: relative;
   z-index: 2;
@@ -51,34 +49,37 @@ body, html {
   border-radius: 22px;
   backdrop-filter: blur(8px);
   border: 2px solid rgba(255,255,255,0.6);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 1s forwards;
 }
 
-/* Heading */
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .welcome-content h1 {
-  font-family: 'Playfair Display', serif;
   font-size: 2.9em;
   margin-bottom: 20px;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  font-weight: 700;
+  color: #1f2d3d;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-/* Description */
 .welcome-content p {
   font-size: 1.15em;
   line-height: 1.7;
   margin-bottom: 35px;
-  color: white;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+  color: #1f2d3d;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.1);
 }
 
-/* Soft Pale White Button */
 button {
   padding: 12px 32px;
   font-size: 17px;
   border: none;
   border-radius: 12px;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.9);
   color: #2c3e50;
   cursor: pointer;
   transition: 0.3s ease;
@@ -86,19 +87,19 @@ button {
 }
 
 button:hover {
-  background: white;
-  transform: scale(1.05);
+  background: rgba(255,255,255,1);
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 /* ---------------- NICKNAME CARD ---------------- */
-
 #nicknameCard {
   display: none;
   position: absolute;
   top:50%;
   left:50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: #fffbee;
   padding: 40px 30px;
   border-radius: 16px;
   max-width: 400px;
@@ -106,14 +107,19 @@ button:hover {
   text-align: center;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   z-index: 3;
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
+
+#nicknameCard.show { opacity: 1; }
 
 #nicknameCard h2 {
   margin-bottom: 20px;
   color: #2c3e50;
 }
 
-#nicknameCard input[type="text"] {
+#nicknameCard input[type="text"],
+#nicknameCard input[type="range"] {
   width: 80%;
   padding: 12px;
   border-radius: 8px;
@@ -122,22 +128,14 @@ button:hover {
   font-size: 16px;
 }
 
-#nicknameCard input[type="range"] {
-  width: 80%;
-  margin: 10px 0;
-}
-
-#nicknameCard button {
-  width: 60%;
-}
+#nicknameCard button { width: 60%; }
 
 /* ---------------- GAME CONTAINER ---------------- */
-
 .container {
   width: 90%;
   max-width: 900px;
   margin: 40px auto;
-  background: #fff6c9;
+  background: #fffbee;
   padding: 30px;
   border-radius: 16px;
   border: 6px solid #fdfdfd;
@@ -163,12 +161,17 @@ h1, h2 {
   border-radius: 12px;
   cursor: pointer;
   border: 3px solid transparent;
-  transition: 0.3s ease;
+  transition: 0.3s ease, box-shadow 0.3s ease;
 }
 
 .images img:hover {
   border-color: #4a90e2;
   transform: scale(1.02);
+}
+
+.images img.selected {
+  border-color: #4a90e2;
+  box-shadow: 0 0 12px rgba(74,144,226,0.6);
 }
 
 .tip {
@@ -178,6 +181,7 @@ h1, h2 {
   border-radius: 10px;
   color: #2c3e50;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
 }
 
 .hidden { display: none; }
@@ -191,11 +195,21 @@ h1, h2 {
 #feedback.correct { background: #d4edda; color: #155724; }
 #feedback.incorrect { background: #f8d7da; color: #721c24; }
 
+#progressBar {
+  height: 8px;
+  width: 0%;
+  background: #4a90e2;
+  border-radius: 4px;
+  margin: 10px auto;
+  transition: width 0.4s ease;
+}
+
 @media (max-width: 600px) {
   .images { flex-direction: column; gap: 15px; }
   .images img { width: 100%; }
+  .welcome-content, #nicknameCard, .container { padding: 25px 20px; }
+  button { font-size: 16px; }
 }
-
 </style>
 </head>
 
@@ -226,16 +240,15 @@ h1, h2 {
 
 <!-- Game Container -->
 <div class="container" id="gameContainer">
-
   <div id="game" class="hidden">
     <h2 id="phaseTitle"></h2>
-    <div class="progress" id="roundInfo"></div>
-
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
     <div class="images">
       <img id="img1" loading="lazy" onclick="selectImage(0)">
       <img id="img2" loading="lazy" onclick="selectImage(1)">
     </div>
-
     <div id="feedback" class="tip hidden"></div>
     <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
   </div>
@@ -244,13 +257,10 @@ h1, h2 {
     <h2>Results</h2>
     <p id="resultText"></p>
     <h3>Final Survey</h3>
-
     <label>How confident are you now? (1–100%)</label><br>
     <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
-
     <label>How helpful was this site? (1–5)</label><br>
     <input type="number" id="rating" min="1" max="5"><br><br>
-
     <button onclick="finish()">Submit</button>
   </div>
 
@@ -258,20 +268,20 @@ h1, h2 {
     <h2>Thank You!</h2>
     <p>We hope you've become more confident at spotting AI-generated images.</p>
   </div>
-
 </div>
 
 <script>
-
 /* Slider Display */
-document.getElementById("confidence").oninput = function(){
+document.getElementById("confidence").addEventListener('input', function(){
   document.getElementById("confidenceValue").innerText = this.value + "%";
-};
+});
 
 /* Show nickname card */
 function showNicknameCard(){
   document.getElementById('welcomePage').style.display = 'none';
-  document.getElementById('nicknameCard').style.display = 'block';
+  const card = document.getElementById('nicknameCard');
+  card.style.display = 'block';
+  setTimeout(()=>card.classList.add('show'), 50);
 }
 
 /* Game Data */
@@ -301,7 +311,13 @@ function loadRound(){
   document.getElementById("feedback").classList.add("hidden");
   document.getElementById("nextBtn").classList.add("hidden");
   document.getElementById("phaseTitle").innerText = phase === 1 ? "Phase 1" : "Phase 2 - Learning Mode";
-  document.getElementById("roundInfo").innerText = "Round " + (currentRound+1) + " of 5";
+  document.getElementById("roundInfo")?.remove(); // remove old round info
+  const progress = document.getElementById("progressBar");
+  progress.style.width = ((currentRound+1)/rounds.length)*100 + "%";
+
+  const imgs = [document.getElementById("img1"), document.getElementById("img2")];
+  imgs.forEach(img => img.classList.remove('selected'));
+
   document.getElementById("img1").src = rounds[currentRound].images[0];
   document.getElementById("img2").src = rounds[currentRound].images[1];
 }
@@ -310,6 +326,10 @@ function selectImage(choice){
   const round = rounds[currentRound];
   const feedback = document.getElementById("feedback");
   feedback.classList.remove("hidden");
+
+  const imgs = [document.getElementById("img1"), document.getElementById("img2")];
+  imgs.forEach(img => img.classList.remove('selected'));
+  imgs[choice].classList.add('selected');
 
   if(choice === round.correct){
     feedback.innerText = "Correct! " + round.tip;
@@ -342,10 +362,11 @@ function nextRound(){
 
 function showResults(){
   document.getElementById("game").classList.add("hidden");
-  document.getElementById("results").classList.remove("hidden");
+  const results = document.getElementById("results");
+  results.classList.remove("hidden");
+  results.classList.add("show");
 
   let improvement = score2 - score1;
-
   document.getElementById("resultText").innerHTML =
     nickname + ",<br><br>" +
     "Phase 1 Accuracy: " + (score1*20) + "%<br>" +
@@ -355,10 +376,10 @@ function showResults(){
 
 function finish(){
   document.getElementById("results").classList.add("hidden");
-  document.getElementById("thankyou").classList.remove("hidden");
+  const thankyou = document.getElementById("thankyou");
+  thankyou.classList.remove("hidden");
+  thankyou.classList.add("show");
 }
-
 </script>
-
 </body>
 </html>
