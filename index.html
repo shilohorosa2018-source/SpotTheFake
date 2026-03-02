@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ---------------- RESET ---------------- */
+/* Reset */
 body, html {
   margin: 0;
   padding: 0;
@@ -21,6 +21,7 @@ body, html {
 
 /* ---------------- WELCOME PAGE ---------------- */
 #welcomePage {
+  background: url('https://i.pinimg.com/originals/8f/be/d3/8fbed3ddce989bcdc881c92c4c7f4457.gif') no-repeat center center/cover;
   width: 100%;
   height: 100vh;
   position: relative;
@@ -30,8 +31,6 @@ body, html {
   text-align: center;
   color: white;
   overflow: hidden;
-  /* High-res reliable background */
-  background: url('https://i.imgur.com/rlzyo7J.jpg') no-repeat center center/cover;
 }
 
 #welcomePage::before {
@@ -43,7 +42,7 @@ body, html {
   z-index: 1;
 }
 
-/* Stars animation */
+/* Animated stars */
 .star {
   position: absolute;
   width: 2px;
@@ -63,13 +62,13 @@ body, html {
   position: relative;
   z-index: 2;
   max-width: 650px;
-  padding: 50px 60px;
-  background: rgba(255, 246, 201, 0.85);
-  border-radius: 25px;
-  backdrop-filter: blur(10px);
+  padding: 45px 55px;
+  background: rgba(255, 246, 201, 0.75);
+  border-radius: 22px;
+  backdrop-filter: blur(8px);
   border: 2px solid rgba(255,255,255,0.6);
   opacity: 0;
-  transform: translateY(25px);
+  transform: translateY(20px);
   animation: fadeIn 1s forwards;
 }
 
@@ -78,26 +77,26 @@ body, html {
 }
 
 .welcome-content h1 {
-  font-size: 3em;
+  font-size: 2.9em;
   margin-bottom: 20px;
   font-weight: 700;
   color: #1f2d3d;
-  text-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .welcome-content p {
-  font-size: 1.2em;
+  font-size: 1.15em;
   line-height: 1.7;
   margin-bottom: 35px;
   color: #1f2d3d;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.1);
 }
 
 button {
-  padding: 14px 36px;
+  padding: 12px 32px;
   font-size: 17px;
   border: none;
-  border-radius: 15px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.9);
   color: #2c3e50;
   cursor: pointer;
@@ -107,8 +106,8 @@ button {
 
 button:hover {
   background: rgba(255,255,255,1);
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 /* ---------------- NICKNAME CARD ---------------- */
@@ -119,24 +118,47 @@ button:hover {
   left:50%;
   transform: translate(-50%, -50%);
   background: #fffbee;
-  padding: 45px 40px;
-  border-radius: 20px;
-  max-width: 450px;
+  padding: 40px 35px;
+  border-radius: 16px;
+  max-width: 420px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
   z-index: 3;
   opacity: 0;
-  transition: opacity 0.7s ease;
+  transition: opacity 0.6s ease;
 }
 
 #nicknameCard.show { opacity: 1; }
 
-#nicknameCard h2 { margin-bottom: 30px; color: #2c3e50; font-weight: 700; }
+#nicknameCard h2 {
+  margin-bottom: 25px;
+  color: #2c3e50;
+  font-weight: 700;
+}
 
 #nicknameCard input[type="text"] {
-  width: 85%; padding: 14px; border-radius: 12px;
-  border: 1px solid #ccc; margin-bottom: 25px; font-size: 17px;
+  width: 85%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 25px;
+  font-size: 17px;
+}
+
+#nicknameCard select {
+  width: 85%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 25px;
+  font-size: 17px;
+  font-family: 'Playfair Display', serif;
+  cursor: pointer;
+}
+
+#nicknameCard select option {
+  font-family: 'Playfair Display', serif;
 }
 
 /* ---------------- GAME CONTAINER ---------------- */
@@ -145,120 +167,86 @@ button:hover {
   max-width: 900px;
   margin: 40px auto;
   background: #fffbee;
-  padding: 35px;
-  border-radius: 18px;
+  padding: 30px;
+  border-radius: 16px;
   border: 6px solid #fdfdfd;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
   color: #2c3e50;
   display: none;
 }
 
-h1, h2, h3 { text-align: center; color: #2c3e50; }
+h1, h2 {
+  text-align: center;
+  color: #2c3e50;
+}
 
 .images {
   display: flex;
   gap: 20px;
   justify-content: center;
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 .images img {
   width: 45%;
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
   border: 3px solid transparent;
   transition: 0.3s ease, box-shadow 0.3s ease;
 }
 
-.images img:hover { border-color: #4a90e2; transform: scale(1.02); }
+.images img:hover {
+  border-color: #4a90e2;
+  transform: scale(1.02);
+}
 
 .images img.selected {
   border-color: #4a90e2;
-  box-shadow: 0 0 14px rgba(74,144,226,0.65);
+  box-shadow: 0 0 12px rgba(74,144,226,0.6);
 }
 
 /* ---------------- TIP BOX ---------------- */
 .tip {
-  margin-top: 18px;
-  padding: 14px;
+  margin-top: 15px;
+  padding: 12px;
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 10px;
   color: #2c3e50;
-  box-shadow: 0 5px 14px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   transition: all 0.5s ease;
   opacity: 0;
-  transform: translateY(25px);
+  transform: translateY(20px);
 }
 
-.tip.show { opacity: 1; transform: translateY(0); }
+.tip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .hidden { display: none; }
 
-/* ---------------- PROGRESS BAR ---------------- */
 .progress {
-  width: 100%;
-  height: 12px;
-  background: #e0e0e0;
-  border-radius: 6px;
-  margin: 20px auto;
-  overflow: hidden;
-}
-
-#progressBar {
-  width: 0%;
-  height: 100%;
-  background: #4a90e2;
-  border-radius: 6px;
-  transition: width 0.5s ease;
-}
-
-/* ---------------- RESULTS PAGE ---------------- */
-#results {
-  display: none;
   text-align: center;
-  padding: 30px;
-  border-radius: 18px;
-  background: #fffbee;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-  margin: 30px auto;
-  max-width: 500px;
-}
-
-#results h2 { margin-bottom: 20px; }
-#results p { font-size: 1.1em; margin-bottom: 20px; }
-#results .scoreTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-#results .scoreTable td, #results .scoreTable th {
-  border: 1px solid #ddd;
-  padding: 10px;
-}
-
-#results .scoreTable th {
-  background-color: #fdfdfd;
-  color: #2c3e50;
+  margin-top: 10px;
   font-weight: 600;
 }
 
-/* ---------------- THANK YOU PAGE ---------------- */
-#thankyou {
-  display: none;
-  text-align: center;
-  padding: 30px;
-  border-radius: 18px;
-  background: #fffbee;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-  margin: 30px auto;
-  max-width: 500px;
+#feedback.correct { background: #d4edda; color: #155724; }
+#feedback.incorrect { background: #f8d7da; color: #721c24; }
+
+#progressBar {
+  height: 8px;
+  width: 0%;
+  background: #4a90e2;
+  border-radius: 4px;
+  margin: 10px auto;
+  transition: width 0.4s ease;
 }
 
 @media (max-width: 600px) {
   .images { flex-direction: column; gap: 15px; }
   .images img { width: 100%; }
-  .welcome-content, #nicknameCard, .container, #results, #thankyou { padding: 25px 20px; }
+  .welcome-content, #nicknameCard, .container { padding: 25px 20px; }
   button { font-size: 16px; }
 }
 </style>
@@ -272,7 +260,8 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
     <h1>Welcome to Spot the Fake</h1>
     <p>
       This website is designed to provide fun and encourage digital literacy.
-      Test your ability to distinguish between authentic and AI-generated images.
+      Test your ability to distinguish between authentic and AI-generated images,
+      and strengthen your critical thinking skills in the digital age.
     </p>
     <button onclick="showNicknameCard()">I'm Ready!</button>
   </div>
@@ -282,6 +271,13 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
 <div id="nicknameCard">
   <h2>Let's Get Started</h2>
   <input type="text" id="nickname" placeholder="Enter your nickname"><br>
+  <label for="confidenceSelect">How confident are you in spotting AI-generated images?</label><br>
+  <select id="confidenceSelect">
+    <option value="1">Not confident 😟</option>
+    <option value="2">Somewhat confident 🙂</option>
+    <option value="3" selected>Confident 😎</option>
+    <option value="4">Very confident 🏆</option>
+  </select><br>
   <button onclick="startPhase()">Start</button>
 </div>
 
@@ -293,8 +289,8 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
       <div id="progressBar"></div>
     </div>
     <div class="images">
-      <img id="img1" onclick="selectImage(0)">
-      <img id="img2" onclick="selectImage(1)">
+      <img id="img1" loading="lazy" onclick="selectImage(0)">
+      <img id="img2" loading="lazy" onclick="selectImage(1)">
     </div>
     <div id="feedback" class="tip hidden"></div>
     <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
@@ -302,13 +298,18 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
 
   <div id="results" class="hidden">
     <h2>Congrats on Completion!</h2>
-    <table class="scoreTable">
-      <tr><th>Phase</th><th>Accuracy</th></tr>
-      <tr><td>Phase 1</td><td id="phase1Score"></td></tr>
-      <tr><td>Phase 2</td><td id="phase2Score"></td></tr>
-      <tr><td>Improvement</td><td id="improvement"></td></tr>
-    </table>
-    <button onclick="finish()">Finish</button>
+    <p id="resultText"></p>
+    <h3>Final Survey</h3>
+    <label>How confident are you now in spotting AI-generated images?</label><br>
+    <select id="finalConfidence">
+      <option value="1">Not confident 😟</option>
+      <option value="2">Somewhat confident 🙂</option>
+      <option value="3" selected>Confident 😎</option>
+      <option value="4">Very confident 🏆</option>
+    </select><br><br>
+    <label>How helpful was this site? (1–10)</label><br>
+    <input type="number" id="rating" min="1" max="10"><br><br>
+    <button onclick="finish()">Submit</button>
   </div>
 
   <div id="thankyou" class="hidden">
@@ -318,7 +319,7 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
 </div>
 
 <script>
-// ---------- STARS ----------
+// ---------- STAR ANIMATION ----------
 const starCount = 80;
 for (let i = 0; i < starCount; i++) {
   const star = document.createElement('div');
@@ -339,7 +340,14 @@ function showNicknameCard(){
 }
 
 // ---------- GAME LOGIC ----------
-const rounds = []; // Images to be added later
+const rounds = [
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Look closely at unnatural lighting and distorted small details like fingers or text."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:1, tip:"AI often struggles with symmetry and background consistency."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Check for overly smooth skin or unrealistic textures."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:1, tip:"Zoom in mentally — small artifacts often reveal AI generation."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Watch for strange shadows and warped objects."},
+];
+
 let phase = 1;
 let currentRound = 0;
 let score1 = 0;
@@ -351,20 +359,82 @@ function startPhase(){
   document.getElementById('nicknameCard').style.display = 'none';
   document.getElementById('gameContainer').style.display = 'block';
   document.getElementById("game").classList.remove("hidden");
+  loadRound();
+}
+
+function loadRound(){
+  const feedback = document.getElementById("feedback");
+  feedback.classList.remove("show");
+  feedback.classList.add("hidden");
+
   document.getElementById("phaseTitle").innerText = phase === 1 ? 
-      "Phase 1 Practice Spotting the Fakes!" : 
-      "Phase 2 Test the Spotting Tips!";
+    "Phase 1 Practice Spotting the Fakes!" : 
+    "Phase 2 Test the Spotting Tips!";
+
+  const progress = document.getElementById("progressBar");
+  progress.style.width = ((currentRound+1)/rounds.length)*100 + "%";
+
+  const imgs = [document.getElementById("img1"), document.getElementById("img2")];
+  imgs.forEach(img => img.classList.remove('selected'));
+
+  document.getElementById("img1").src = rounds[currentRound].images[0];
+  document.getElementById("img2").src = rounds[currentRound].images[1];
+
+  document.getElementById("nextBtn").classList.add("hidden");
 }
 
 function selectImage(choice){
+  const round = rounds[currentRound];
   const feedback = document.getElementById("feedback");
   feedback.classList.remove("hidden");
+  feedback.classList.add("show");
+
+  const imgs = [document.getElementById("img1"), document.getElementById("img2")];
+  imgs.forEach(img => img.classList.remove('selected'));
+  imgs[choice].classList.add('selected');
+
+  if(choice === round.correct){
+    feedback.innerText = "Correct! " + round.tip;
+    feedback.classList.add("correct");
+    feedback.classList.remove("incorrect");
+    if(phase === 1) score1++; else score2++;
+  } else {
+    feedback.innerText = "Not quite. " + round.tip;
+    feedback.classList.add("incorrect");
+    feedback.classList.remove("correct");
+  }
+
   feedback.classList.add("show");
   document.getElementById("nextBtn").classList.remove("hidden");
 }
 
 function nextRound(){
-  // To be implemented when images are added
+  currentRound++;
+  if(currentRound < rounds.length){
+    loadRound();
+  } else {
+    if(phase === 1){
+      phase = 2;
+      currentRound = 0;
+      loadRound();
+    } else {
+      showResults();
+    }
+  }
+}
+
+function showResults(){
+  document.getElementById("game").classList.add("hidden");
+  const results = document.getElementById("results");
+  results.classList.remove("hidden");
+  results.classList.add("show");
+
+  let improvement = score2 - score1;
+  document.getElementById("resultText").innerHTML =
+    nickname + ",<br><br>" +
+    "Phase 1 Accuracy: " + (score1*20) + "%<br>" +
+    "Phase 2 Accuracy: " + (score2*20) + "%<br>" +
+    "Improvement: " + (improvement*20) + "%";
 }
 
 function finish(){
