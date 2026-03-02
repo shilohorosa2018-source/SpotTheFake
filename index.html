@@ -214,7 +214,6 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
 
 /* ---------------- RESULTS PAGE ---------------- */
 #results {
-  display: none;
   text-align: center;
   padding: 30px;
   border-radius: 18px;
@@ -224,29 +223,8 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
   max-width: 500px;
 }
 
-#results h2 { margin-bottom: 20px; }
-#results p { font-size: 1.1em; margin-bottom: 20px; }
-#results table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-#results th, #results td {
-  border: 1px solid #ddd;
-  padding: 10px;
-}
-
-#results th {
-  background-color: #fdfdfd;
-  color: #2c3e50;
-  font-weight: 600;
-  text-align: left;
-}
-
 /* ---------------- THANK YOU PAGE ---------------- */
 #thankyou {
-  display: none;
   text-align: center;
   padding: 30px;
   border-radius: 18px;
@@ -287,10 +265,10 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
   <input type="text" id="nickname" placeholder="Enter your nickname"><br>
   <label for="confidenceSelect">How confident are you in spotting AI-generated images?</label><br>
   <select id="confidenceSelect">
-    <option value="1">Not confident 😟</option>
-    <option value="2">Somewhat confident 🙂</option>
-    <option value="3" selected>Confident 😎</option>
-    <option value="4">Very confident 🏆</option>
+    <option value="1">Not confident</option>
+    <option value="2">Somewhat confident</option>
+    <option value="3" selected>Confident</option>
+    <option value="4">Very confident</option>
   </select><br>
   <button onclick="startPhase()">Start</button>
 </div>
@@ -321,10 +299,10 @@ h1, h2, h3 { text-align: center; color: #2c3e50; }
     <h3>Final Survey</h3>
     <label>How confident are you now in spotting AI-generated images?</label><br>
     <select id="finalConfidence">
-      <option value="1">Not confident 😟</option>
-      <option value="2">Somewhat confident 🙂</option>
-      <option value="3" selected>Confident 😎</option>
-      <option value="4">Very confident 🏆</option>
+      <option value="1">Not confident</option>
+      <option value="2">Somewhat confident</option>
+      <option value="3" selected>Confident</option>
+      <option value="4">Very confident</option>
     </select><br><br>
     <label>How helpful was this site? (1–10)</label><br>
     <input type="number" id="rating" min="1" max="10"><br><br>
@@ -352,9 +330,9 @@ for (let i = 0; i < starCount; i++) {
 
 // ---------- NICKNAME CARD ----------
 function showNicknameCard(){
-  document.getElementById('welcomePage').style.display = 'none';
+  document.getElementById('welcomePage').classList.add('hidden');
   const card = document.getElementById('nicknameCard');
-  card.style.display = 'block';
+  card.classList.remove('hidden');
   setTimeout(()=>card.classList.add('show'), 50);
 }
 
@@ -375,8 +353,8 @@ let nickname = "";
 
 function startPhase(){
   nickname = document.getElementById("nickname").value || "Player";
-  document.getElementById('nicknameCard').style.display = 'none';
-  document.getElementById('gameContainer').style.display = 'block';
+  document.getElementById('nicknameCard').classList.add('hidden');
+  document.getElementById('gameContainer').classList.remove('hidden');
   document.getElementById("game").classList.remove("hidden");
   loadRound();
 }
@@ -406,7 +384,6 @@ function selectImage(choice){
   const round = rounds[currentRound];
   const feedback = document.getElementById("feedback");
   feedback.classList.remove("hidden");
-  feedback.classList.add("show");
 
   const imgs = [document.getElementById("img1"), document.getElementById("img2")];
   imgs.forEach(img => img.classList.remove('selected'));
@@ -446,19 +423,16 @@ function showResults(){
   document.getElementById("game").classList.add("hidden");
   const results = document.getElementById("results");
   results.classList.remove("hidden");
-  results.classList.add("show");
 
   let improvement = score2 - score1;
-  document.getElementById("phase1Score").innerText = (score1*20) + "%";
-  document.getElementById("phase2Score").innerText = (score2*20) + "%";
-  document.getElementById("improvement").innerText = (improvement*20) + "%";
+  document.getElementById("phase1Score").innerText = ((score1/rounds.length)*100) + "%";
+  document.getElementById("phase2Score").innerText = ((score2/rounds.length)*100) + "%";
+  document.getElementById("improvement").innerText = ((improvement/rounds.length)*100) + "%";
 }
 
 function finish(){
   document.getElementById("results").classList.add("hidden");
-  const thankyou = document.getElementById("thankyou");
-  thankyou.classList.remove("hidden");
-  thankyou.classList.add("show");
+  document.getElementById("thankyou").classList.remove("hidden");
 }
 </script>
 
