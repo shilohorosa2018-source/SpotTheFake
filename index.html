@@ -10,11 +10,11 @@ body, html {
   padding: 0;
   height: 100%;
   font-family: 'Segoe UI', sans-serif;
-  background: #f4f6f9;
+  background: #0d1b2a; /* fallback dark blue */
   overflow-x: hidden;
 }
 
-/* Fullscreen welcome page */
+/* Welcome page */
 #welcomePage {
   background: url('https://i.pinimg.com/1200x/e9/c3/80/e9c380cc63539a5c3b0867834f5c6887.jpg') no-repeat center center/cover;
   width: 100%;
@@ -26,6 +26,13 @@ body, html {
   color: white;
   text-align: center;
   overflow: hidden;
+  animation: backgroundMove 30s linear infinite alternate;
+}
+
+/* Smooth drifting background */
+@keyframes backgroundMove {
+  0% { background-position: center center; }
+  100% { background-position: 10% 10%; }
 }
 
 /* Overlay for dimming */
@@ -74,22 +81,6 @@ button:hover {
   transform: scale(1.05);
 }
 
-/* Shooting stars */
-.shooting-star {
-  position: absolute;
-  width: 3px;
-  height: 80px;
-  background: linear-gradient(45deg, white, rgba(255,255,255,0));
-  transform: rotate(45deg);
-  animation: shoot 2.5s linear infinite;
-}
-
-@keyframes shoot {
-  0% { transform: translate(0,0) rotate(45deg); opacity: 0; }
-  10% { opacity: 1; }
-  100% { transform: translate(120vw, 80vh) rotate(45deg); opacity: 0; }
-}
-
 /* Nickname input card */
 #nicknameCard {
   display: none;
@@ -130,21 +121,22 @@ button:hover {
   width: 60%;
 }
 
-/* Main game container */
+/* Main Game Container */
 .container {
   width: 90%;
   max-width: 900px;
   margin: 40px auto;
-  background: white;
+  background: #0d1b2a; /* dark blue matching welcome page */
   padding: 30px;
   border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  color: white;
   display: none;
 }
 
 h1, h2 {
   text-align: center;
-  color: #2c3e50;
+  color: #ffffff;
 }
 
 .images {
@@ -171,6 +163,7 @@ h1, h2 {
   padding: 10px;
   background: #e8f0fe;
   border-radius: 8px;
+  color: #2c3e50;
 }
 
 .hidden { display: none; }
@@ -185,12 +178,8 @@ h1, h2 {
 #feedback.correct { background: #d4edda; color: #155724; }
 #feedback.incorrect { background: #f8d7da; color: #721c24; }
 
-/* Responsive images */
 @media (max-width: 600px) {
-  .images {
-    flex-direction: column;
-    gap: 15px;
-  }
+  .images { flex-direction: column; gap: 15px; }
   .images img { width: 100%; }
 }
 </style>
@@ -204,11 +193,6 @@ h1, h2 {
     <p>Test your skills at identifying AI-generated images. Click below when you're ready!</p>
     <button onclick="showNicknameCard()">I'm Ready</button>
   </div>
-  <!-- Multiple shooting stars -->
-  <div class="shooting-star" style="top:20%; left:-150px; animation-delay:0s;"></div>
-  <div class="shooting-star" style="top:35%; left:-200px; animation-delay:1.5s;"></div>
-  <div class="shooting-star" style="top:50%; left:-100px; animation-delay:3s;"></div>
-  <div class="shooting-star" style="top:25%; left:-250px; animation-delay:4.2s;"></div>
 </div>
 
 <!-- Nickname input card -->
