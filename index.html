@@ -79,17 +79,17 @@ button {
   font-size: 17px;
   border: none;
   border-radius: 12px;
-  background: rgba(255,255,255,0.95);
-  color: #1f2d3d;
+  background: rgba(255,255,255,0.9);
+  color: #2c3e50;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  background: rgba(255,255,255,1);
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 /* ---------------- NICKNAME CARD ---------------- */
@@ -119,7 +119,16 @@ button:hover {
   font-weight: 700;
 }
 
-#nicknameCard input[type="text"], #nicknameCard select {
+#nicknameCard input[type="text"] {
+  width: 85%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 25px;
+  font-size: 17px;
+}
+
+#nicknameCard select {
   width: 85%;
   padding: 12px;
   border-radius: 10px;
@@ -130,34 +139,34 @@ button:hover {
   cursor: pointer;
 }
 
+#nicknameCard select option {
+  font-family: 'Playfair Display', serif;
+}
+
 /* ---------------- GAME CONTAINER ---------------- */
 .container {
   width: 90%;
   max-width: 900px;
   margin: 40px auto;
+  background: #fffbee;
+  padding: 30px;
+  border-radius: 16px;
+  border: 6px solid #fdfdfd;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
   color: #2c3e50;
   display: none;
 }
 
-/* Individual Image Set */
-.image-set {
-  margin-bottom: 40px;
-  padding: 25px;
-  background: #fffbee;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
-
-.image-set h3 {
-  margin-bottom: 15px;
-  font-weight: 600;
+h1, h2 {
+  text-align: center;
+  color: #2c3e50;
 }
 
 .images {
   display: flex;
   gap: 20px;
   justify-content: center;
-  margin: 15px 0;
+  margin-top: 20px;
 }
 
 .images img {
@@ -165,50 +174,47 @@ button:hover {
   border-radius: 12px;
   cursor: pointer;
   border: 3px solid transparent;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: 0.3s ease, box-shadow 0.3s ease;
 }
 
 .images img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  border-color: #4a90e2;
+  transform: scale(1.02);
 }
 
 .images img.selected {
   border-color: #4a90e2;
-  box-shadow: 0 0 18px rgba(74,144,226,0.5);
-}
-
-.show-tip-btn {
-  margin-top: 8px;
-  background: #4a90e2;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.show-tip-btn:hover {
-  background: #357ab8;
+  box-shadow: 0 0 12px rgba(74,144,226,0.6);
 }
 
 .tip {
-  margin-top: 12px;
-  padding: 12px 15px;
-  background: #fdfdfd;
+  margin-top: 15px;
+  padding: 12px;
+  background: #ffffff;
   border-radius: 10px;
-  box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
   color: #2c3e50;
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
 }
 
-.tip.show {
-  max-height: 200px;
-  opacity: 1;
+.hidden { display: none; }
+
+.progress {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+#feedback.correct { background: #d4edda; color: #155724; }
+#feedback.incorrect { background: #f8d7da; color: #721c24; }
+
+#progressBar {
+  height: 8px;
+  width: 0%;
+  background: #4a90e2;
+  border-radius: 4px;
+  margin: 10px auto;
+  transition: width 0.4s ease;
 }
 
 @media (max-width: 600px) {
@@ -251,68 +257,39 @@ button:hover {
 
 <!-- Game Container -->
 <div class="container" id="gameContainer">
-
-  <!-- Rounds -->
-  <div class="image-set">
-    <h3>Q1</h3>
+  <div id="game" class="hidden">
+    <h2 id="phaseTitle"></h2>
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
     <div class="images">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
+      <img id="img1" loading="lazy" onclick="selectImage(0)">
+      <img id="img2" loading="lazy" onclick="selectImage(1)">
     </div>
-    <button class="show-tip-btn" onclick="toggleTip(this)">+ Click to See Tip</button>
-    <div class="tip">
-      Look closely at unnatural lighting and distorted small details like fingers or text.
-    </div>
+    <div id="feedback" class="tip hidden"></div>
+    <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
   </div>
 
-  <div class="image-set">
-    <h3>Q2</h3>
-    <div class="images">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-    </div>
-    <button class="show-tip-btn" onclick="toggleTip(this)">+ Click to See Tip</button>
-    <div class="tip">
-      AI often struggles with symmetry and background consistency.
-    </div>
+  <div id="results" class="hidden">
+    <h2>Congrats on Completion!</h2>
+    <p id="resultText"></p>
+    <h3>Final Survey</h3>
+    <label>How confident are you now in spotting AI-generated images?</label><br>
+    <select id="finalConfidence">
+      <option value="1">Not confident 😟</option>
+      <option value="2">Somewhat confident 🙂</option>
+      <option value="3" selected>Confident 😎</option>
+      <option value="4">Very confident 🏆</option>
+    </select><br><br>
+    <label>How helpful was this site? (1–10)</label><br>
+    <input type="number" id="rating" min="1" max="10"><br><br>
+    <button onclick="finish()">Submit</button>
   </div>
 
-  <div class="image-set">
-    <h3>Q3</h3>
-    <div class="images">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-    </div>
-    <button class="show-tip-btn" onclick="toggleTip(this)">+ Click to See Tip</button>
-    <div class="tip">
-      Check for overly smooth skin or unrealistic textures.
-    </div>
+  <div id="thankyou" class="hidden">
+    <h2>Thank You!</h2>
+    <p>We hope you've become more confident at spotting AI-generated images.</p>
   </div>
-
-  <div class="image-set">
-    <h3>Q4</h3>
-    <div class="images">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-    </div>
-    <button class="show-tip-btn" onclick="toggleTip(this)">+ Click to See Tip</button>
-    <div class="tip">
-      Zoom in mentally — small artifacts often reveal AI generation.
-    </div>
-  </div>
-
-  <div class="image-set">
-    <h3>Q5</h3>
-    <div class="images">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-      <img src="https://via.placeholder.com/400" onclick="selectImage(this)">
-    </div>
-    <button class="show-tip-btn" onclick="toggleTip(this)">+ Click to See Tip</button>
-    <div class="tip">
-      Watch for strange shadows and warped objects.
-    </div>
-  </div>
-
 </div>
 
 <script>
@@ -321,26 +298,105 @@ function showNicknameCard(){
   const card = document.getElementById('nicknameCard');
   card.style.display = 'block';
   setTimeout(()=>card.classList.add('show'), 50);
-  document.getElementById("nickname").focus();
 }
+
+const rounds = [
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Look closely at unnatural lighting and distorted small details like fingers or text."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:1, tip:"AI often struggles with symmetry and background consistency."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Check for overly smooth skin or unrealistic textures."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:1, tip:"Zoom in mentally — small artifacts often reveal AI generation."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Watch for strange shadows and warped objects."},
+];
+
+let phase = 1;
+let currentRound = 0;
+let score1 = 0;
+let score2 = 0;
+let nickname = "";
 
 function startPhase(){
-  const nickname = document.getElementById("nickname").value || "Player";
+  nickname = document.getElementById("nickname").value || "Player";
   document.getElementById('nicknameCard').style.display = 'none';
   document.getElementById('gameContainer').style.display = 'block';
+  document.getElementById("game").classList.remove("hidden");
+  loadRound();
 }
 
-/* Image selection */
-function selectImage(imgEl){
-  const images = imgEl.parentElement.querySelectorAll("img");
-  images.forEach(i => i.classList.remove("selected"));
-  imgEl.classList.add("selected");
+function loadRound(){
+  document.getElementById("feedback").classList.add("hidden");
+  document.getElementById("nextBtn").classList.add("hidden");
+
+  document.getElementById("phaseTitle").innerText = phase === 1 ? 
+    "Phase 1 Practice Spotting the Fakes!" : 
+    "Phase 2 Test the Spotting Tips!";
+
+  const progress = document.getElementById("progressBar");
+  progress.style.width = ((currentRound+1)/rounds.length)*100 + "%";
+
+  const imgs = [document.getElementById("img1"), document.getElementById("img2")];
+  imgs.forEach(img => img.classList.remove('selected'));
+
+  document.getElementById("img1").src = rounds[currentRound].images[0];
+  document.getElementById("img2").src = rounds[currentRound].images[1];
 }
 
-/* Toggle tip */
-function toggleTip(btn){
-  const tip = btn.nextElementSibling;
-  tip.classList.toggle("show");
+function selectImage(choice){
+  const round = rounds[currentRound];
+  const feedback = document.getElementById("feedback");
+  feedback.classList.remove("hidden");
+
+  const imgs = [document.getElementById("img1"), document.getElementById("img2")];
+  imgs.forEach(img => img.classList.remove('selected'));
+  imgs[choice].classList.add('selected');
+
+  if(choice === round.correct){
+    feedback.innerText = "Correct! " + round.tip;
+    feedback.classList.add("correct");
+    feedback.classList.remove("incorrect");
+    if(phase === 1) score1++; else score2++;
+  } else {
+    feedback.innerText = "Not quite. " + round.tip;
+    feedback.classList.add("incorrect");
+    feedback.classList.remove("correct");
+  }
+
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function nextRound(){
+  currentRound++;
+  if(currentRound < 5){
+    loadRound();
+  } else {
+    if(phase === 1){
+      phase = 2;
+      currentRound = 0;
+      loadRound();
+    } else {
+      showResults();
+    }
+  }
+}
+
+function showResults(){
+  document.getElementById("game").classList.add("hidden");
+  const results = document.getElementById("results");
+  results.classList.remove("hidden");
+  results.classList.add("show");
+
+  let improvement = score2 - score1;
+  document.getElementById("resultText").innerHTML =
+    nickname + ",<br><br>" +
+    "Phase 1 Accuracy: " + (score1*20) + "%<br>" +
+    "Phase 2 Accuracy: " + (score2*20) + "%<br>" +
+    "Improvement: " + (improvement*20) + "%";
+}
+
+function finish(){
+  document.getElementById("results").classList.add("hidden");
+  const thankyou = document.getElementById("thankyou");
+  thankyou.classList.remove("hidden");
+  thankyou.classList.add("show");
 }
 </script>
 
