@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Spot the AI</title>
+<title>Spot the Fake</title>
+
+<!-- Formal Cute Font -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
 
@@ -29,54 +32,61 @@ body, html {
   text-align: center;
 }
 
-/* Dark overlay for readability */
+/* Overlay */
 #welcomePage::before {
   content: '';
   position: absolute;
   top:0; left:0;
   width:100%; height:100%;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,0.45);
 }
 
-/* Professional welcome card */
+/* Pale Yellow Glass Card */
 .welcome-content {
   position: relative;
   z-index: 2;
   max-width: 650px;
-  padding: 40px 50px;
-  background: rgba(0,0,0,0.65);
-  border-radius: 18px;
-  backdrop-filter: blur(6px);
+  padding: 45px 55px;
+  background: rgba(255, 246, 201, 0.75);
+  border-radius: 22px;
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255,255,255,0.6);
 }
 
+/* Heading */
 .welcome-content h1 {
-  font-size: 2.8em;
+  font-family: 'Playfair Display', serif;
+  font-size: 2.9em;
   margin-bottom: 20px;
   font-weight: 600;
-  letter-spacing: 1px;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
+/* Description */
 .welcome-content p {
   font-size: 1.15em;
-  line-height: 1.6;
-  margin-bottom: 30px;
-  opacity: 0.95;
+  line-height: 1.7;
+  margin-bottom: 35px;
+  color: white;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.3);
 }
 
-/* Buttons */
+/* Soft Pale White Button */
 button {
-  padding: 12px 28px;
+  padding: 12px 32px;
   font-size: 17px;
   border: none;
-  border-radius: 10px;
-  background: #4a90e2;
-  color: white;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.85);
+  color: #2c3e50;
   cursor: pointer;
   transition: 0.3s ease;
+  font-weight: 500;
 }
 
 button:hover {
-  background: #357abd;
+  background: white;
   transform: scale(1.05);
 }
 
@@ -127,10 +137,10 @@ button:hover {
   width: 90%;
   max-width: 900px;
   margin: 40px auto;
-  background: #fff6c9; /* pastel yellow */
+  background: #fff6c9;
   padding: 30px;
   border-radius: 16px;
-  border: 6px solid #fdfdfd; /* pale white border */
+  border: 6px solid #fdfdfd;
   box-shadow: 0 12px 35px rgba(0,0,0,0.15);
   color: #2c3e50;
   display: none;
@@ -141,7 +151,6 @@ h1, h2 {
   color: #2c3e50;
 }
 
-/* Images */
 .images {
   display: flex;
   gap: 20px;
@@ -162,7 +171,6 @@ h1, h2 {
   transform: scale(1.02);
 }
 
-/* Feedback */
 .tip {
   margin-top: 15px;
   padding: 12px;
@@ -180,7 +188,6 @@ h1, h2 {
   font-weight: 600;
 }
 
-/* Feedback colors */
 #feedback.correct { background: #d4edda; color: #155724; }
 #feedback.incorrect { background: #f8d7da; color: #721c24; }
 
@@ -194,22 +201,20 @@ h1, h2 {
 
 <body>
 
-<!-- ---------------- WELCOME PAGE ---------------- -->
-
+<!-- WELCOME PAGE -->
 <div id="welcomePage">
   <div class="welcome-content">
-    <h1>Spot the AI</h1>
+    <h1>Welcome to Spot the Fake</h1>
     <p>
-      This interactive assessment is designed to evaluate and enhance your ability 
-      to distinguish between authentic photographs and AI-generated images.
-      You will complete two phases and receive feedback on your performance.
+      This website is designed to provide fun and encourage digital literacy.
+      Test your ability to distinguish between authentic and AI-generated images,
+      and strengthen your critical thinking skills in the digital age.
     </p>
-    <button onclick="showNicknameCard()">Begin Assessment</button>
+    <button onclick="showNicknameCard()">I'm Ready!</button>
   </div>
 </div>
 
-<!-- ---------------- NICKNAME CARD ---------------- -->
-
+<!-- Nickname Card -->
 <div id="nicknameCard">
   <h2>Enter Your Nickname</h2>
   <input type="text" id="nickname" placeholder="Nickname"><br>
@@ -219,8 +224,7 @@ h1, h2 {
   <button onclick="startPhase()">Start</button>
 </div>
 
-<!-- ---------------- GAME CONTAINER ---------------- -->
-
+<!-- Game Container -->
 <div class="container" id="gameContainer">
 
   <div id="game" class="hidden">
@@ -252,7 +256,7 @@ h1, h2 {
 
   <div id="thankyou" class="hidden">
     <h2>Thank You!</h2>
-    <p>We hope this activity has strengthened your ability to critically evaluate digital imagery.</p>
+    <p>We hope you've become more confident at spotting AI-generated images.</p>
   </div>
 
 </div>
