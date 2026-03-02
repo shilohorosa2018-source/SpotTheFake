@@ -330,9 +330,9 @@ for (let i = 0; i < starCount; i++) {
 
 // ---------- NICKNAME CARD ----------
 function showNicknameCard(){
-  document.getElementById('welcomePage').classList.add('hidden');
+  document.getElementById('welcomePage').style.display = 'none'; // hide welcome page
   const card = document.getElementById('nicknameCard');
-  card.classList.remove('hidden');
+  card.style.display = 'block'; // show nickname card
   setTimeout(()=>card.classList.add('show'), 50);
 }
 
@@ -353,8 +353,8 @@ let nickname = "";
 
 function startPhase(){
   nickname = document.getElementById("nickname").value || "Player";
-  document.getElementById('nicknameCard').classList.add('hidden');
-  document.getElementById('gameContainer').classList.remove('hidden');
+  document.getElementById('nicknameCard').style.display = 'none';
+  document.getElementById('gameContainer').style.display = 'block';
   document.getElementById("game").classList.remove("hidden");
   loadRound();
 }
