@@ -2,197 +2,235 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Spot the AI</title>
+<title>Spot The Fake</title>
+
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f4f6f9;
   margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #eef2f7, #e3ebf5);
   display: flex;
   justify-content: center;
+  padding: 40px 20px;
 }
 
-.container {
-  width: 90%;
-  max-width: 900px;
-  margin-top: 40px;
+.card {
   background: white;
-  padding: 30px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 900px;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+  transition: 0.3s;
 }
 
 h1, h2 {
   text-align: center;
-  color: #2c3e50;
+  color: #1f2d3d;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #6b7c93;
+  margin-bottom: 30px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #dce3ec;
+  font-size: 16px;
+}
+
+input[type="range"] {
+  width: 100%;
 }
 
 button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background: #4a90e2;
+  background: #4c6ef5;
   color: white;
-  cursor: pointer;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: none;
   font-size: 16px;
-  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 button:hover {
-  background: #357abd;
+  background: #364fc7;
+  transform: translateY(-2px);
 }
 
 .images {
   display: flex;
   gap: 20px;
-  justify-content: center;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .images img {
-  width: 45%;
-  border-radius: 10px;
+  width: 50%;
+  border-radius: 14px;
   cursor: pointer;
-  border: 3px solid transparent;
   transition: 0.3s;
+  border: 3px solid transparent;
 }
 
 .images img:hover {
-  border-color: #4a90e2;
+  transform: scale(1.03);
+  border-color: #4c6ef5;
 }
 
 .tip {
-  margin-top: 15px;
-  padding: 10px;
-  background: #e8f0fe;
-  border-radius: 8px;
+  margin-top: 20px;
+  padding: 15px;
+  background: #edf2ff;
+  border-radius: 12px;
+  color: #364fc7;
 }
-
-.hidden { display: none; }
 
 .progress {
   text-align: center;
   margin-top: 10px;
-  font-weight: bold;
+  color: #6b7c93;
 }
+
+.results-box {
+  background: #f8f9ff;
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 20px;
+}
+
+.hidden { display: none; }
+.center { text-align: center; margin-top: 20px; }
 </style>
 </head>
 
 <body>
-<div class="container">
+<div class="card">
 
 <div id="welcome">
-  <h1>Can You Spot the AI?</h1>
+  <h1>Spot The Fake</h1>
+  <p class="subtitle">Test and improve your ability to detect AI-generated images</p>
+  
   <input type="text" id="nickname" placeholder="Enter your nickname"><br><br>
-  <label>How confident are you? (1-100%)</label><br>
-  <input type="range" id="confidence" min="1" max="100" value="50">
-  <p id="confidenceValue">50%</p>
-  <button onclick="startPhase()">Start</button>
+  
+  <label>How confident are you? (<span id="confValue">50</span>%)</label>
+  <input type="range" id="confidence" min="1" max="100" value="50"><br><br>
+  
+  <div class="center">
+    <button onclick="startGame()">Begin</button>
+  </div>
 </div>
 
 <div id="game" class="hidden">
   <h2 id="phaseTitle"></h2>
   <div class="progress" id="roundInfo"></div>
+  
   <div class="images">
-    <img id="img1" onclick="selectImage(0)">
-    <img id="img2" onclick="selectImage(1)">
+    <img id="img1" onclick="choose(0)">
+    <img id="img2" onclick="choose(1)">
   </div>
+  
   <div id="feedback" class="tip hidden"></div>
-  <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
+  
+  <div class="center">
+    <button id="nextBtn" class="hidden" onclick="next()">Next Round</button>
+  </div>
 </div>
 
 <div id="results" class="hidden">
   <h2>Results</h2>
-  <p id="resultText"></p>
-  <h3>Final Survey</h3>
-  <label>How confident are you now? (1-100%)</label><br>
+  <div class="results-box" id="resultText"></div>
+  
+  <h3 class="center">Final Survey</h3>
+  
+  <label>How confident are you now? (<span id="finalConfValue">50</span>%)</label>
   <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
-  <label>How helpful was this site? (1-5)</label><br>
-  <input type="number" id="rating" min="1" max="5"><br>
-  <button onclick="finish()">Submit</button>
+  
+  <label>How helpful was this site? (1–5)</label>
+  <input type="number" id="rating" min="1" max="5"><br><br>
+  
+  <div class="center">
+    <button onclick="finish()">Submit</button>
+  </div>
 </div>
 
-<div id="thankyou" class="hidden">
+<div id="thanks" class="hidden center">
   <h2>Thank You!</h2>
-  <p>We hope you've become more confident at spotting AI-generated images.</p>
+  <p>We hope you’ve become more confident at identifying AI-generated images.</p>
 </div>
 
 </div>
 
 <script>
 const rounds = [
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:0,
-   tip:"Look closely at unnatural lighting and distorted small details like fingers or text."},
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:1,
-   tip:"AI often struggles with symmetry and background consistency."},
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:0,
-   tip:"Check for overly smooth skin or unrealistic textures."},
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:1,
-   tip:"Zoom in mentally — small artifacts often reveal AI generation."},
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:0,
-   tip:"Watch for strange shadows and warped objects."},
+  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:0, tip:"AI often struggles with realistic hands, shadows, and fine background details."},
+  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:1, tip:"Look for unnatural lighting or overly smooth textures."},
+  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:0, tip:"Check symmetry and repeated patterns."},
+  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:1, tip:"Zoom in mentally for distorted small elements."},
+  {images:["https://via.placeholder.com/500","https://via.placeholder.com/500"], correct:0, tip:"Watch for warped text or background artifacts."}
 ];
 
 let phase = 1;
-let currentRound = 0;
+let round = 0;
 let score1 = 0;
 let score2 = 0;
-let nickname = "";
+let name = "";
 
-document.getElementById("confidence").oninput = function(){
-  document.getElementById("confidenceValue").innerText = this.value + "%";
+document.getElementById("confidence").oninput = function() {
+  document.getElementById("confValue").innerText = this.value;
 };
 
-function startPhase(){
-  nickname = document.getElementById("nickname").value;
+document.getElementById("finalConfidence").oninput = function() {
+  document.getElementById("finalConfValue").innerText = this.value;
+};
+
+function startGame() {
+  name = document.getElementById("nickname").value || "Participant";
   document.getElementById("welcome").classList.add("hidden");
   document.getElementById("game").classList.remove("hidden");
   loadRound();
 }
 
-function loadRound(){
+function loadRound() {
   document.getElementById("feedback").classList.add("hidden");
   document.getElementById("nextBtn").classList.add("hidden");
 
-  document.getElementById("phaseTitle").innerText = 
-    phase === 1 ? "Phase 1" : "Phase 2 - Learning Mode";
+  document.getElementById("phaseTitle").innerText = phase === 1 ? "Phase 1" : "Phase 2 – Learning Mode";
+  document.getElementById("roundInfo").innerText = "Round " + (round+1) + " of 5";
 
-  document.getElementById("roundInfo").innerText =
-    "Round " + (currentRound+1) + " of 5";
-
-  document.getElementById("img1").src = rounds[currentRound].images[0];
-  document.getElementById("img2").src = rounds[currentRound].images[1];
+  document.getElementById("img1").src = rounds[round].images[0];
+  document.getElementById("img2").src = rounds[round].images[1];
 }
 
-function selectImage(choice){
-  const round = rounds[currentRound];
+function choose(choice) {
   const feedback = document.getElementById("feedback");
   feedback.classList.remove("hidden");
 
-  if(choice === round.correct){
-    feedback.innerText = "Correct! " + round.tip;
-    if(phase === 1) score1++;
-    else score2++;
+  if(choice === rounds[round].correct) {
+    feedback.innerText = "Correct! " + rounds[round].tip;
+    if(phase === 1) score1++; else score2++;
   } else {
-    feedback.innerText = "Not quite. " + round.tip;
+    feedback.innerText = "Not quite. " + rounds[round].tip;
   }
 
   document.getElementById("nextBtn").classList.remove("hidden");
 }
 
-function nextRound(){
-  currentRound++;
-  if(currentRound < 5){
+function next() {
+  round++;
+  if(round < 5) {
     loadRound();
   } else {
-    if(phase === 1){
+    if(phase === 1) {
       phase = 2;
-      currentRound = 0;
+      round = 0;
       loadRound();
     } else {
       showResults();
@@ -200,21 +238,22 @@ function nextRound(){
   }
 }
 
-function showResults(){
+function showResults() {
   document.getElementById("game").classList.add("hidden");
   document.getElementById("results").classList.remove("hidden");
 
-  let improvement = score2 - score1;
+  let improvement = (score2 - score1) * 20;
+
   document.getElementById("resultText").innerHTML =
-    nickname + ",<br><br>" +
+    "<strong>" + name + "</strong><br><br>" +
     "Phase 1 Accuracy: " + (score1*20) + "%<br>" +
     "Phase 2 Accuracy: " + (score2*20) + "%<br>" +
-    "Improvement: " + (improvement*20) + "%";
+    "Improvement: " + improvement + "%";
 }
 
-function finish(){
+function finish() {
   document.getElementById("results").classList.add("hidden");
-  document.getElementById("thankyou").classList.remove("hidden");
+  document.getElementById("thanks").classList.remove("hidden");
 }
 </script>
 
