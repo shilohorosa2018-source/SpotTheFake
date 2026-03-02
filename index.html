@@ -247,11 +247,10 @@ h1, h2 {
   <input type="text" id="nickname" placeholder="Enter your nickname"><br>
   <label for="confidenceSelect">How confident are you in spotting AI-generated images?</label><br>
   <select id="confidenceSelect">
-    <option value="1">Not confident</option>
-    <option value="2">Somewhat confident</option>
-    <option value="3" selected>Confident</option>
-    <option value="4">Very confident</option>
-    <option value="5">Expert</option>
+    <option value="1">Not confident 😟</option>
+    <option value="2">Somewhat confident 🙂</option>
+    <option value="3" selected>Confident 😎</option>
+    <option value="4">Very confident 🏆</option>
   </select><br>
   <button onclick="startPhase()">Start</button>
 </div>
@@ -272,13 +271,18 @@ h1, h2 {
   </div>
 
   <div id="results" class="hidden">
-    <h2>Results</h2>
+    <h2>Congrats on Completion!</h2>
     <p id="resultText"></p>
     <h3>Final Survey</h3>
-    <label>How confident are you now? (1–100%)</label><br>
-    <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
-    <label>How helpful was this site? (1–5)</label><br>
-    <input type="number" id="rating" min="1" max="5"><br><br>
+    <label>How confident are you now in spotting AI-generated images?</label><br>
+    <select id="finalConfidence">
+      <option value="1">Not confident 😟</option>
+      <option value="2">Somewhat confident 🙂</option>
+      <option value="3" selected>Confident 😎</option>
+      <option value="4">Very confident 🏆</option>
+    </select><br><br>
+    <label>How helpful was this site? (1–10)</label><br>
+    <input type="number" id="rating" min="1" max="10"><br><br>
     <button onclick="finish()">Submit</button>
   </div>
 
@@ -289,7 +293,6 @@ h1, h2 {
 </div>
 
 <script>
-/* Show nickname card */
 function showNicknameCard(){
   document.getElementById('welcomePage').style.display = 'none';
   const card = document.getElementById('nicknameCard');
@@ -297,7 +300,6 @@ function showNicknameCard(){
   setTimeout(()=>card.classList.add('show'), 50);
 }
 
-/* Game Data */
 const rounds = [
   {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Look closely at unnatural lighting and distorted small details like fingers or text."},
   {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:1, tip:"AI often struggles with symmetry and background consistency."},
@@ -323,7 +325,10 @@ function startPhase(){
 function loadRound(){
   document.getElementById("feedback").classList.add("hidden");
   document.getElementById("nextBtn").classList.add("hidden");
-  document.getElementById("phaseTitle").innerText = phase === 1 ? "Phase 1" : "Phase 2 - Learning Mode";
+
+  document.getElementById("phaseTitle").innerText = phase === 1 ? 
+    "Phase 1 Practice Spotting the Fakes!" : 
+    "Phase 2 Test the Spotting Tips!";
 
   const progress = document.getElementById("progressBar");
   progress.style.width = ((currentRound+1)/rounds.length)*100 + "%";
