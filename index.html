@@ -1,163 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Spot The Fake</title>
+<title>Spot the AI</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
 
-/* Reset */
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; font-family:'Inter', sans-serif; overflow:hidden; background:#000; }
+.container {
+  width: 90%;
+  max-width: 900px;
+  margin-top: 40px;
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
 
-/* Background Layers */
-#background { position:fixed; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index:-2; }
-#bgImage { position:absolute; top:0; left:0; width:100%; height:100%; background:url('/mnt/data/995f36a3-9afd-4e77-9911-26dee0e71309.png') center/cover no-repeat; background-size:cover; }
-#stars { position:absolute; width:200%; height:200%; background:radial-gradient(white 0.5px, transparent 1px); background-size:10px 10px; opacity:0.2; animation:moveStars 120s linear infinite, twinkle 3s ease-in-out infinite; }
+h1, h2 {
+  text-align: center;
+  color: #2c3e50;
+}
 
-@keyframes moveStars { 0%{transform:translate(0,0);} 100%{transform:translate(-50%,-50%);} }
-@keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:0.5;} }
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #4a90e2;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px;
+}
 
-/* Cards */
-.card { background:rgba(0,0,0,0.7); border-radius:20px; padding:40px; text-align:center; color:#fff; box-shadow:0 20px 50px rgba(0,0,0,0.6); max-width:600px; width:90%; transition:all 0.6s ease; }
-.card h1 { font-size:2.5rem; margin-bottom:20px; }
-.card p { font-size:1.1rem; margin-bottom:30px; color:#ddd; }
-input[type="text"] { width:80%; padding:12px 15px; border-radius:12px; border:none; font-size:16px; margin-bottom:20px; outline:none; }
-button { background:#4c6ef5; color:white; padding:12px 25px; border-radius:12px; border:none; font-size:16px; cursor:pointer; transition:all 0.3s ease; }
-button:hover { background:#364fc7; transform:translateY(-2px); }
+button:hover {
+  background: #357abd;
+}
 
-/* Welcome Screen */
-#welcome { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; z-index:1; }
+.images {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
 
-/* Training Screen */
-#training { display:none; flex-direction:column; justify-content:center; align-items:center; height:100%; width:100%; position:fixed; top:0; left:0; background:rgba(0,0,0,0.85); padding:20px; text-align:center; }
-.training-image { max-width:80%; border-radius:20px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.5); cursor:pointer; }
-.dropdown-tip { margin-bottom:20px; cursor:pointer; background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:10px; color:#ccc; font-size:0.95rem; }
-.dropdown-content { display:none; padding:10px 15px; background:rgba(255,255,255,0.1); border-radius:10px; color:#eee; margin-top:5px; font-size:0.9rem; }
-.accuracy-box { margin-top:20px; font-size:1rem; color:#ddd; }
-.guess-btn { background:#4c6ef5; color:white; border:none; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:16px; margin:5px; transition:all 0.3s ease; }
-.guess-btn:hover { background:#364fc7; transform:translateY(-2px); }
+.images img {
+  width: 45%;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: 0.3s;
+}
 
+.images img:hover {
+  border-color: #4a90e2;
+}
+
+.tip {
+  margin-top: 15px;
+  padding: 10px;
+  background: #e8f0fe;
+  border-radius: 8px;
+}
+
+.hidden { display: none; }
+
+.progress {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+}
 </style>
 </head>
+
 <body>
+<div class="container">
 
-<div id="background">
-  <div id="bgImage"></div>
-  <div id="stars"></div>
-</div>
-
-<!-- Welcome Screen -->
 <div id="welcome">
-  <div class="card">
-    <h1>Welcome to Spot The Fake</h1>
-    <p>Train your eye to spot AI-generated images. Enter your nickname to start!</p>
-    <input type="text" id="nickname" placeholder="Enter your nickname">
-    <br>
-    <button id="startBtn">Start Training</button>
-  </div>
+  <h1>Can You Spot the AI?</h1>
+  <input type="text" id="nickname" placeholder="Enter your nickname"><br><br>
+  <label>How confident are you? (1-100%)</label><br>
+  <input type="range" id="confidence" min="1" max="100" value="50">
+  <p id="confidenceValue">50%</p>
+  <button onclick="startPhase()">Start</button>
 </div>
 
-<!-- Training Screen -->
-<div id="training">
-  <div class="card">
-    <h2 id="phaseTitle"></h2>
-    <div class="training-image" id="slideImage"></div>
-    <div class="dropdown-tip">Tip (click to see)
-      <div class="dropdown-content" id="slideTip"></div>
-    </div>
-    <div>
-      <button class="guess-btn" id="aiBtn">AI Image</button>
-      <button class="guess-btn" id="realBtn">Authentic Image</button>
-    </div>
-    <div class="accuracy-box" id="accuracyBox"></div>
+<div id="game" class="hidden">
+  <h2 id="phaseTitle"></h2>
+  <div class="progress" id="roundInfo"></div>
+  <div class="images">
+    <img id="img1" onclick="selectImage(0)">
+    <img id="img2" onclick="selectImage(1)">
   </div>
+  <div id="feedback" class="tip hidden"></div>
+  <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
+</div>
+
+<div id="results" class="hidden">
+  <h2>Results</h2>
+  <p id="resultText"></p>
+  <h3>Final Survey</h3>
+  <label>How confident are you now? (1-100%)</label><br>
+  <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
+  <label>How helpful was this site? (1-5)</label><br>
+  <input type="number" id="rating" min="1" max="5"><br>
+  <button onclick="finish()">Submit</button>
+</div>
+
+<div id="thankyou" class="hidden">
+  <h2>Thank You!</h2>
+  <p>We hope you've become more confident at spotting AI-generated images.</p>
+</div>
+
 </div>
 
 <script>
-// Nickname & Start
-const startBtn = document.getElementById('startBtn');
-const nicknameInput = document.getElementById('nickname');
-const welcomeDiv = document.getElementById('welcome');
-const trainingDiv = document.getElementById('training');
-const slideImage = document.getElementById('slideImage');
-const slideTip = document.getElementById('slideTip');
-const phaseTitle = document.getElementById('phaseTitle');
-const accuracyBox = document.getElementById('accuracyBox');
-const aiBtn = document.getElementById('aiBtn');
-const realBtn = document.getElementById('realBtn');
+const rounds = [
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
+   correct:0,
+   tip:"Look closely at unnatural lighting and distorted small details like fingers or text."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
+   correct:1,
+   tip:"AI often struggles with symmetry and background consistency."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
+   correct:0,
+   tip:"Check for overly smooth skin or unrealistic textures."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
+   correct:1,
+   tip:"Zoom in mentally — small artifacts often reveal AI generation."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
+   correct:0,
+   tip:"Watch for strange shadows and warped objects."},
+];
 
+let phase = 1;
+let currentRound = 0;
+let score1 = 0;
+let score2 = 0;
 let nickname = "";
-let currentPhase = 1;
-let currentSet = 0;
-let userResponsesPhase1 = [];
-let userResponsesPhase2 = [];
 
-// Editable data: 2 phases x 5 sets
-const phaseData = {
-  1:[
-    {imgAI:'/mnt/data/image1.png', imgReal:'/mnt/data/image2.png', tip:'AI often struggles with realistic shadows and fine details.'},
-    {imgAI:'/mnt/data/image3.png', imgReal:'/mnt/data/image4.png', tip:'Look for unnatural textures or odd reflections.'},
-    {imgAI:'/mnt/data/image5.png', imgReal:'/mnt/data/image6.png', tip:'Check symmetry and repeated patterns.'},
-    {imgAI:'/mnt/data/image7.png', imgReal:'/mnt/data/image8.png', tip:'Zoom in for distorted elements or inconsistent lighting.'},
-    {imgAI:'/mnt/data/image9.png', imgReal:'/mnt/data/image10.png', tip:'Watch for warped text or background artifacts.'},
-  ],
-  2:[
-    {imgAI:'/mnt/data/image11.png', imgReal:'/mnt/data/image12.png', tip:'Focus on small details like eyes, hands, and hair.'},
-    {imgAI:'/mnt/data/image13.png', imgReal:'/mnt/data/image14.png', tip:'Notice reflections and shadows carefully.'},
-    {imgAI:'/mnt/data/image15.png', imgReal:'/mnt/data/image16.png', tip:'Check textures for consistency.'},
-    {imgAI:'/mnt/data/image17.png', imgReal:'/mnt/data/image18.png', tip:'Look at complex backgrounds for AI errors.'},
-    {imgAI:'/mnt/data/image19.png', imgReal:'/mnt/data/image20.png', tip:'Notice lighting differences across objects.'},
-  ]
+document.getElementById("confidence").oninput = function(){
+  document.getElementById("confidenceValue").innerText = this.value + "%";
 };
 
-// Start Training
-startBtn.onclick = () => {
-  nickname = nicknameInput.value.trim() || "Participant";
-  welcomeDiv.style.display = "none";
-  trainingDiv.style.display = "flex";
-  currentPhase = 1;
-  currentSet = 0;
-  userResponsesPhase1 = [];
-  userResponsesPhase2 = [];
-  loadSet();
-};
+function startPhase(){
+  nickname = document.getElementById("nickname").value;
+  document.getElementById("welcome").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+  loadRound();
+}
 
-// Load set
-function loadSet(){
-  phaseTitle.innerText = `Phase ${currentPhase} – Set ${currentSet+1} of 5`;
-  slideTip.innerText = '';
-  const set = phaseData[currentPhase][currentSet];
-  // Randomize which side AI goes
-  if(Math.random()<0.5){
-    slideImage.innerHTML = `<img src="${set.imgAI}" id="leftImg" style="width:45%; margin:5px;"><img src="${set.imgReal}" id="rightImg" style="width:45%; margin:5px;">`;
-    leftIsAI = true;
+function loadRound(){
+  document.getElementById("feedback").classList.add("hidden");
+  document.getElementById("nextBtn").classList.add("hidden");
+
+  document.getElementById("phaseTitle").innerText = 
+    phase === 1 ? "Phase 1" : "Phase 2 - Learning Mode";
+
+  document.getElementById("roundInfo").innerText =
+    "Round " + (currentRound+1) + " of 5";
+
+  document.getElementById("img1").src = rounds[currentRound].images[0];
+  document.getElementById("img2").src = rounds[currentRound].images[1];
+}
+
+function selectImage(choice){
+  const round = rounds[currentRound];
+  const feedback = document.getElementById("feedback");
+  feedback.classList.remove("hidden");
+
+  if(choice === round.correct){
+    feedback.innerText = "Correct! " + round.tip;
+    if(phase === 1) score1++;
+    else score2++;
   } else {
-    slideImage.innerHTML = `<img src="${set.imgReal}" id="leftImg" style="width:45%; margin:5px;"><img src="${set.imgAI}" id="rightImg" style="width:45%; margin:5px;">`;
-    leftIsAI = false;
+    feedback.innerText = "Not quite. " + round.tip;
   }
+
+  document.getElementById("nextBtn").classList.remove("hidden");
 }
 
-let leftIsAI = true;
-
-function revealTip(correct){
-  const set = phaseData[currentPhase][currentSet];
-  slideTip.innerText = `${correct ? "Correct! " : "Not quite. "} Tip: ${set.tip}`;
-}
-
-function handleChoice(isAISelected){
-  const correct = (leftIsAI && isAISelected) || (!leftIsAI && !isAISelected);
-  revealTip(correct);
-  if(currentPhase===1) userResponsesPhase1.push(correct);
-  else userResponsesPhase2.push(correct);
-  currentSet++;
-  if(currentSet<5){
-    setTimeout(loadSet, 1500);
+function nextRound(){
+  currentRound++;
+  if(currentRound < 5){
+    loadRound();
   } else {
-    if(currentPhase===1){
-      currentPhase = 2;
-      currentSet = 0;
-      setTimeout(loadSet,1500);
+    if(phase === 1){
+      phase = 2;
+      currentRound = 0;
+      loadRound();
     } else {
       showResults();
     }
@@ -165,26 +201,22 @@ function handleChoice(isAISelected){
 }
 
 function showResults(){
-  const acc1 = Math.round(userResponsesPhase1.filter(r=>r).length/5*100);
-  const acc2 = Math.round(userResponsesPhase2.filter(r=>r).length/5*100);
-  trainingDiv.innerHTML = `<div class="card"><h2>Training Complete!</h2><p>${nickname}, here are your results:</p>
-  <p>Phase 1 Accuracy: ${acc1}%</p>
-  <p>Phase 2 Accuracy: ${acc2}%</p>
-  <p>Improvement: ${acc2-acc1}%</p></div>`;
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("results").classList.remove("hidden");
+
+  let improvement = score2 - score1;
+  document.getElementById("resultText").innerHTML =
+    nickname + ",<br><br>" +
+    "Phase 1 Accuracy: " + (score1*20) + "%<br>" +
+    "Phase 2 Accuracy: " + (score2*20) + "%<br>" +
+    "Improvement: " + (improvement*20) + "%";
 }
 
-aiBtn.onclick = ()=>handleChoice(true);
-realBtn.onclick = ()=>handleChoice(false);
-
-// Dropdown tip toggle
-document.addEventListener('click', e=>{
-  if(e.target.classList.contains('dropdown-tip')){
-    const content = e.target.querySelector('.dropdown-content');
-    if(content) content.style.display = content.style.display==='block'?'none':'block';
-  }
-});
+function finish(){
+  document.getElementById("results").classList.add("hidden");
+  document.getElementById("thankyou").classList.remove("hidden");
+}
 </script>
-</body>
-</html>
+
 </body>
 </html>
