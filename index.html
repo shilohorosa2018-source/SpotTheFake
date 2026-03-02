@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <title>Spot the AI</title>
+
 <style>
+
 /* Reset */
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: 'Segoe UI', sans-serif;
-  background: #0d1b2a;
   overflow-x: hidden;
 }
 
-/* New Welcome Background */
+/* ---------------- WELCOME PAGE ---------------- */
+
 #welcomePage {
   background: url('https://i.pinimg.com/originals/8f/be/d3/8fbed3ddce989bcdc881c92c4c7f4457.gif') no-repeat center center/cover;
   width: 100%;
@@ -27,45 +29,50 @@ body, html {
   text-align: center;
 }
 
-/* Overlay for dimming */
+/* Dark overlay for readability */
 #welcomePage::before {
   content: '';
   position: absolute;
   top:0; left:0;
   width:100%; height:100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.55);
 }
 
-/* Welcome content */
+/* Professional welcome card */
 .welcome-content {
   position: relative;
   z-index: 2;
-  max-width: 600px;
-  padding: 30px 40px;
-  background: rgba(0,0,0,0.6);
-  border-radius: 16px;
-  backdrop-filter: blur(4px);
+  max-width: 650px;
+  padding: 40px 50px;
+  background: rgba(0,0,0,0.65);
+  border-radius: 18px;
+  backdrop-filter: blur(6px);
 }
 
 .welcome-content h1 {
-  font-size: 3em;
-  margin-bottom: 15px;
+  font-size: 2.8em;
+  margin-bottom: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .welcome-content p {
-  font-size: 1.2em;
+  font-size: 1.15em;
+  line-height: 1.6;
   margin-bottom: 30px;
+  opacity: 0.95;
 }
 
+/* Buttons */
 button {
   padding: 12px 28px;
-  font-size: 18px;
+  font-size: 17px;
   border: none;
   border-radius: 10px;
   background: #4a90e2;
   color: white;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 button:hover {
@@ -73,7 +80,8 @@ button:hover {
   transform: scale(1.05);
 }
 
-/* Nickname input card */
+/* ---------------- NICKNAME CARD ---------------- */
+
 #nicknameCard {
   display: none;
   position: absolute;
@@ -113,24 +121,27 @@ button:hover {
   width: 60%;
 }
 
-/* Main Game Container */
+/* ---------------- GAME CONTAINER ---------------- */
+
 .container {
   width: 90%;
   max-width: 900px;
   margin: 40px auto;
-  background: #0d1b2a;
+  background: #fff6c9; /* pastel yellow */
   padding: 30px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  color: white;
+  border-radius: 16px;
+  border: 6px solid #fdfdfd; /* pale white border */
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+  color: #2c3e50;
   display: none;
 }
 
 h1, h2 {
   text-align: center;
-  color: #ffffff;
+  color: #2c3e50;
 }
 
+/* Images */
 .images {
   display: flex;
   gap: 20px;
@@ -140,22 +151,25 @@ h1, h2 {
 
 .images img {
   width: 45%;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   border: 3px solid transparent;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .images img:hover {
   border-color: #4a90e2;
+  transform: scale(1.02);
 }
 
+/* Feedback */
 .tip {
   margin-top: 15px;
-  padding: 10px;
-  background: #e8f0fe;
-  border-radius: 8px;
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 10px;
   color: #2c3e50;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 .hidden { display: none; }
@@ -163,7 +177,7 @@ h1, h2 {
 .progress {
   text-align: center;
   margin-top: 10px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 /* Feedback colors */
@@ -174,20 +188,28 @@ h1, h2 {
   .images { flex-direction: column; gap: 15px; }
   .images img { width: 100%; }
 }
+
 </style>
 </head>
+
 <body>
 
-<!-- Updated Welcome page -->
+<!-- ---------------- WELCOME PAGE ---------------- -->
+
 <div id="welcomePage">
   <div class="welcome-content">
     <h1>Spot the AI</h1>
-    <p>Click below to start the challenge!</p>
-    <button onclick="showNicknameCard()">Start Game</button>
+    <p>
+      This interactive assessment is designed to evaluate and enhance your ability 
+      to distinguish between authentic photographs and AI-generated images.
+      You will complete two phases and receive feedback on your performance.
+    </p>
+    <button onclick="showNicknameCard()">Begin Assessment</button>
   </div>
 </div>
 
-<!-- Nickname input card -->
+<!-- ---------------- NICKNAME CARD ---------------- -->
+
 <div id="nicknameCard">
   <h2>Enter Your Nickname</h2>
   <input type="text" id="nickname" placeholder="Nickname"><br>
@@ -197,15 +219,19 @@ h1, h2 {
   <button onclick="startPhase()">Start</button>
 </div>
 
-<!-- Main Game Container -->
+<!-- ---------------- GAME CONTAINER ---------------- -->
+
 <div class="container" id="gameContainer">
+
   <div id="game" class="hidden">
     <h2 id="phaseTitle"></h2>
     <div class="progress" id="roundInfo"></div>
+
     <div class="images">
       <img id="img1" loading="lazy" onclick="selectImage(0)">
       <img id="img2" loading="lazy" onclick="selectImage(1)">
     </div>
+
     <div id="feedback" class="tip hidden"></div>
     <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
   </div>
@@ -214,21 +240,26 @@ h1, h2 {
     <h2>Results</h2>
     <p id="resultText"></p>
     <h3>Final Survey</h3>
+
     <label>How confident are you now? (1–100%)</label><br>
     <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
+
     <label>How helpful was this site? (1–5)</label><br>
-    <input type="number" id="rating" min="1" max="5"><br>
+    <input type="number" id="rating" min="1" max="5"><br><br>
+
     <button onclick="finish()">Submit</button>
   </div>
 
   <div id="thankyou" class="hidden">
     <h2>Thank You!</h2>
-    <p>We hope you've become more confident at spotting AI-generated images.</p>
+    <p>We hope this activity has strengthened your ability to critically evaluate digital imagery.</p>
   </div>
+
 </div>
 
 <script>
-/* Range slider display */
+
+/* Slider Display */
 document.getElementById("confidence").oninput = function(){
   document.getElementById("confidenceValue").innerText = this.value + "%";
 };
@@ -239,7 +270,7 @@ function showNicknameCard(){
   document.getElementById('nicknameCard').style.display = 'block';
 }
 
-/* Game logic */
+/* Game Data */
 const rounds = [
   {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Look closely at unnatural lighting and distorted small details like fingers or text."},
   {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:1, tip:"AI often struggles with symmetry and background consistency."},
@@ -275,30 +306,42 @@ function selectImage(choice){
   const round = rounds[currentRound];
   const feedback = document.getElementById("feedback");
   feedback.classList.remove("hidden");
+
   if(choice === round.correct){
     feedback.innerText = "Correct! " + round.tip;
-    feedback.classList.add("correct"); feedback.classList.remove("incorrect");
+    feedback.classList.add("correct");
+    feedback.classList.remove("incorrect");
     if(phase === 1) score1++; else score2++;
   } else {
     feedback.innerText = "Not quite. " + round.tip;
-    feedback.classList.add("incorrect"); feedback.classList.remove("correct");
+    feedback.classList.add("incorrect");
+    feedback.classList.remove("correct");
   }
+
   document.getElementById("nextBtn").classList.remove("hidden");
 }
 
 function nextRound(){
   currentRound++;
-  if(currentRound < 5){ loadRound(); }
-  else{
-    if(phase === 1){ phase = 2; currentRound = 0; loadRound(); }
-    else{ showResults(); }
+  if(currentRound < 5){
+    loadRound();
+  } else {
+    if(phase === 1){
+      phase = 2;
+      currentRound = 0;
+      loadRound();
+    } else {
+      showResults();
+    }
   }
 }
 
 function showResults(){
   document.getElementById("game").classList.add("hidden");
   document.getElementById("results").classList.remove("hidden");
+
   let improvement = score2 - score1;
+
   document.getElementById("resultText").innerHTML =
     nickname + ",<br><br>" +
     "Phase 1 Accuracy: " + (score1*20) + "%<br>" +
@@ -310,6 +353,7 @@ function finish(){
   document.getElementById("results").classList.add("hidden");
   document.getElementById("thankyou").classList.remove("hidden");
 }
+
 </script>
 
 </body>
