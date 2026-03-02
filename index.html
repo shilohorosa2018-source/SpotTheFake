@@ -4,13 +4,14 @@
 <meta charset="UTF-8">
 <title>Spot the AI</title>
 <style>
-/* Reset & body */
+/* Reset */
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
   font-family: 'Segoe UI', sans-serif;
   background: #f4f6f9;
+  overflow-x: hidden;
 }
 
 /* Fullscreen welcome page */
@@ -27,12 +28,12 @@ body, html {
   overflow: hidden;
 }
 
-/* Overlay for subtle dimming */
+/* Overlay for dimming */
 #welcomePage::before {
   content: '';
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top:0; left:0;
+  width:100%; height:100%;
   background: rgba(0,0,0,0.3);
 }
 
@@ -57,7 +58,6 @@ body, html {
   margin-bottom: 30px;
 }
 
-/* Buttons */
 button {
   padding: 12px 28px;
   font-size: 18px;
@@ -74,35 +74,28 @@ button:hover {
   transform: scale(1.05);
 }
 
-/* Shooting star */
+/* Shooting stars */
 .shooting-star {
   position: absolute;
-  top: -50px;
-  left: -100px;
   width: 3px;
   height: 80px;
   background: linear-gradient(45deg, white, rgba(255,255,255,0));
   transform: rotate(45deg);
-  animation: shoot 3s linear infinite;
+  animation: shoot 2.5s linear infinite;
 }
 
 @keyframes shoot {
-  0% {
-    transform: translate(0, 0) rotate(45deg);
-    opacity: 0;
-  }
+  0% { transform: translate(0,0) rotate(45deg); opacity: 0; }
   10% { opacity: 1; }
-  100% {
-    transform: translate(120vw, 120vh) rotate(45deg);
-    opacity: 0;
-  }
+  100% { transform: translate(120vw, 80vh) rotate(45deg); opacity: 0; }
 }
 
-/* Modern nickname input card */
+/* Nickname input card */
 #nicknameCard {
   display: none;
   position: absolute;
-  top: 50%; left: 50%;
+  top:50%;
+  left:50%;
   transform: translate(-50%, -50%);
   background: white;
   padding: 40px 30px;
@@ -128,11 +121,16 @@ button:hover {
   font-size: 16px;
 }
 
+#nicknameCard input[type="range"] {
+  width: 80%;
+  margin: 10px 0;
+}
+
 #nicknameCard button {
   width: 60%;
 }
 
-/* Game container */
+/* Main game container */
 .container {
   width: 90%;
   max-width: 900px;
@@ -147,10 +145,6 @@ button:hover {
 h1, h2 {
   text-align: center;
   color: #2c3e50;
-}
-
-button:hover {
-  background: #357abd;
 }
 
 .images {
@@ -186,18 +180,35 @@ button:hover {
   margin-top: 10px;
   font-weight: bold;
 }
+
+/* Feedback colors */
+#feedback.correct { background: #d4edda; color: #155724; }
+#feedback.incorrect { background: #f8d7da; color: #721c24; }
+
+/* Responsive images */
+@media (max-width: 600px) {
+  .images {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .images img { width: 100%; }
+}
 </style>
 </head>
 <body>
 
-<!-- Welcome Page -->
+<!-- Welcome page -->
 <div id="welcomePage">
   <div class="welcome-content">
     <h1>Welcome to Spot the AI</h1>
     <p>Test your skills at identifying AI-generated images. Click below when you're ready!</p>
     <button onclick="showNicknameCard()">I'm Ready</button>
   </div>
-  <div class="shooting-star"></div>
+  <!-- Multiple shooting stars -->
+  <div class="shooting-star" style="top:20%; left:-150px; animation-delay:0s;"></div>
+  <div class="shooting-star" style="top:35%; left:-200px; animation-delay:1.5s;"></div>
+  <div class="shooting-star" style="top:50%; left:-100px; animation-delay:3s;"></div>
+  <div class="shooting-star" style="top:25%; left:-250px; animation-delay:4.2s;"></div>
 </div>
 
 <!-- Nickname input card -->
@@ -212,6 +223,7 @@ button:hover {
 
 <!-- Main Game Container -->
 <div class="container" id="gameContainer">
+
   <div id="game" class="hidden">
     <h2 id="phaseTitle"></h2>
     <div class="progress" id="roundInfo"></div>
@@ -241,35 +253,24 @@ button:hover {
 </div>
 
 <script>
-/* Shooting star handled by CSS animation */
-
-function showNicknameCard(){
-  document.getElementById('welcomePage').style.display = 'none';
-  document.getElementById('nicknameCard').style.display = 'block';
-}
-
 /* Range slider display */
 document.getElementById("confidence").oninput = function(){
   document.getElementById("confidenceValue").innerText = this.value + "%";
 };
 
-/* Game Logic */
+/* Show nickname card */
+function showNicknameCard(){
+  document.getElementById('welcomePage').style.display = 'none';
+  document.getElementById('nicknameCard').style.display = 'block';
+}
+
+/* Game logic */
 const rounds = [
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:0,
-   tip:"Look closely at unnatural lighting and distorted small details like fingers or text."},
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:1,
-   tip:"AI often struggles with symmetry and background consistency."},
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:0,
-   tip:"Check for overly smooth skin or unrealistic textures."},
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:1,
-   tip:"Zoom in mentally — small artifacts often reveal AI generation."},
-  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
-   correct:0,
-   tip:"Watch for strange shadows and warped objects."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Look closely at unnatural lighting and distorted small details like fingers or text."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:1, tip:"AI often struggles with symmetry and background consistency."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Check for overly smooth skin or unrealistic textures."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:1, tip:"Zoom in mentally — small artifacts often reveal AI generation."},
+  {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"], correct:0, tip:"Watch for strange shadows and warped objects."},
 ];
 
 let phase = 1;
@@ -289,13 +290,8 @@ function startPhase(){
 function loadRound(){
   document.getElementById("feedback").classList.add("hidden");
   document.getElementById("nextBtn").classList.add("hidden");
-
-  document.getElementById("phaseTitle").innerText = 
-    phase === 1 ? "Phase 1" : "Phase 2 - Learning Mode";
-
-  document.getElementById("roundInfo").innerText =
-    "Round " + (currentRound+1) + " of 5";
-
+  document.getElementById("phaseTitle").innerText = phase === 1 ? "Phase 1" : "Phase 2 - Learning Mode";
+  document.getElementById("roundInfo").innerText = "Round " + (currentRound+1) + " of 5";
   document.getElementById("img1").src = rounds[currentRound].images[0];
   document.getElementById("img2").src = rounds[currentRound].images[1];
 }
@@ -304,37 +300,29 @@ function selectImage(choice){
   const round = rounds[currentRound];
   const feedback = document.getElementById("feedback");
   feedback.classList.remove("hidden");
-
   if(choice === round.correct){
     feedback.innerText = "Correct! " + round.tip;
-    if(phase === 1) score1++;
-    else score2++;
+    feedback.classList.add("correct"); feedback.classList.remove("incorrect");
+    if(phase === 1) score1++; else score2++;
   } else {
     feedback.innerText = "Not quite. " + round.tip;
+    feedback.classList.add("incorrect"); feedback.classList.remove("correct");
   }
-
   document.getElementById("nextBtn").classList.remove("hidden");
 }
 
 function nextRound(){
   currentRound++;
-  if(currentRound < 5){
-    loadRound();
-  } else {
-    if(phase === 1){
-      phase = 2;
-      currentRound = 0;
-      loadRound();
-    } else {
-      showResults();
-    }
+  if(currentRound < 5){ loadRound(); }
+  else{
+    if(phase === 1){ phase = 2; currentRound = 0; loadRound(); }
+    else{ showResults(); }
   }
 }
 
 function showResults(){
   document.getElementById("game").classList.add("hidden");
   document.getElementById("results").classList.remove("hidden");
-
   let improvement = score2 - score1;
   document.getElementById("resultText").innerHTML =
     nickname + ",<br><br>" +
