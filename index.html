@@ -3,179 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <title>Spot The Fake</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 /* Reset */
 * { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; font-family:'Inter', sans-serif; background:#000; overflow:hidden; }
+html, body { height:100%; font-family:'Inter', sans-serif; overflow:hidden; background:#000; }
 
 /* Background Layers */
-#background { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2; overflow:hidden; }
-#bgImage { position:absolute; top:0; left:0; width:100%; height:100%; background:url('/mnt/data/5ded1975-7eb0-4e70-9ec0-ef41f5bc6028.png') center/cover no-repeat; animation: zoomSlow 60s linear infinite; }
-#stars { position:absolute; width:200%; height:200%; background:radial-gradient(white 0.5px, transparent 1px); background-size:10px 10px; opacity:0.2; animation: moveStars 120s linear infinite, twinkle 3s ease-in-out infinite; }
-#clouds { position:absolute; width:200%; height:200%; background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 70%); animation: moveClouds 180s linear infinite alternate; }
+#background { position:fixed; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index:-2; }
+#bgImage { position:absolute; top:0; left:0; width:100%; height:100%; background:url('/mnt/data/995f36a3-9afd-4e77-9911-26dee0e71309.png') center/cover no-repeat; background-size:cover; }
+#stars { position:absolute; width:200%; height:200%; background:radial-gradient(white 0.5px, transparent 1px); background-size:10px 10px; opacity:0.2; animation:moveStars 120s linear infinite, twinkle 3s ease-in-out infinite; }
 
-/* Animations */
-@keyframes zoomSlow { 0%{transform:scale(1);} 50%{transform:scale(1.02);} 100%{transform:scale(1);} }
 @keyframes moveStars { 0%{transform:translate(0,0);} 100%{transform:translate(-50%,-50%);} }
 @keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:0.5;} }
-@keyframes moveClouds { 0%{transform:translate(0,0);} 100%{transform:translate(-10%,-10%);} }
-@keyframes slideUp { 0%{opacity:0; transform:translateY(30px);} 100%{opacity:1; transform:translateY(0);} }
-@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
-@keyframes fadeOut { to{opacity:0; transform:translateY(-20px);} }
 
-/* Welcome Card */
-#welcome { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; }
-.card { position:relative; z-index:1; background:rgba(0,0,0,0.75); padding:50px; border-radius:20px; text-align:center; color:#fff; box-shadow:0 20px 50px rgba(0,0,0,0.6); max-width:600px; width:90%; animation:slideUp 1s ease forwards, float 6s ease-in-out infinite; transition: all 0.6s ease; }
+/* Cards */
+.card { background:rgba(0,0,0,0.7); border-radius:20px; padding:40px; text-align:center; color:#fff; box-shadow:0 20px 50px rgba(0,0,0,0.6); max-width:600px; width:90%; transition:all 0.6s ease; }
 .card h1 { font-size:2.5rem; margin-bottom:20px; }
 .card p { font-size:1.1rem; margin-bottom:30px; color:#ddd; }
-.card input[type="text"] { width:80%; padding:12px 15px; margin-bottom:20px; border-radius:12px; border:none; font-size:16px; outline:none; }
-.card button { background:#4c6ef5; color:white; padding:12px 25px; border-radius:12px; border:none; font-size:16px; cursor:pointer; transition:all 0.3s ease; }
-.card button:hover { background:#364fc7; transform:translateY(-2px); }
-.tip-card { margin-top:20px; background:rgba(255,255,255,0.05); padding:15px 20px; border-radius:12px; font-size:0.95rem; color:#ccc; animation:float 6s ease-in-out infinite; }
+input[type="text"] { width:80%; padding:12px 15px; border-radius:12px; border:none; font-size:16px; margin-bottom:20px; outline:none; }
+button { background:#4c6ef5; color:white; padding:12px 25px; border-radius:12px; border:none; font-size:16px; cursor:pointer; transition:all 0.3s ease; }
+button:hover { background:#364fc7; transform:translateY(-2px); }
 
-/* Training Slideshow */
-#training { display:none; flex-direction:column; justify-content:center; align-items:center; height:100%; width:100%; position:fixed; top:0; left:0; background:rgba(0,0,0,0.85); padding:20px; overflow:auto; text-align:center; }
-.training-image { max-width:80%; border-radius:20px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition: transform 0.3s ease; }
-.training-image:hover { transform: scale(1.02); }
-.training-tip { max-width:80%; text-align:left; color:#eee; font-size:1rem; margin-bottom:20px; background:rgba(255,255,255,0.05); padding:15px 20px; border-radius:12px; }
+/* Welcome Screen */
+#welcome { position:fixed; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; z-index:1; }
 
-/* Buttons */
-.guess-btn, .phase-btn { background:#4c6ef5; color:white; border:none; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:16px; margin:5px; transition:all 0.3s ease; }
-.guess-btn:hover, .phase-btn:hover { background:#364fc7; transform:translateY(-2px); }
-
-/* Fade-out class */
-.fade-out { animation: fadeOut 0.8s forwards; }
-
-/* Dropdown Tip Style */
+/* Training Screen */
+#training { display:none; flex-direction:column; justify-content:center; align-items:center; height:100%; width:100%; position:fixed; top:0; left:0; background:rgba(0,0,0,0.85); padding:20px; text-align:center; }
+.training-image { max-width:80%; border-radius:20px; margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,0.5); cursor:pointer; }
 .dropdown-tip { margin-bottom:20px; cursor:pointer; background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:10px; color:#ccc; font-size:0.95rem; }
 .dropdown-content { display:none; padding:10px 15px; background:rgba(255,255,255,0.1); border-radius:10px; color:#eee; margin-top:5px; font-size:0.9rem; }
+.accuracy-box { margin-top:20px; font-size:1rem; color:#ddd; }
+.guess-btn { background:#4c6ef5; color:white; border:none; padding:10px 20px; border-radius:12px; cursor:pointer; font-size:16px; margin:5px; transition:all 0.3s ease; }
+.guess-btn:hover { background:#364fc7; transform:translateY(-2px); }
+
 </style>
 </head>
 <body>
 
-<!-- Background -->
 <div id="background">
   <div id="bgImage"></div>
   <div id="stars"></div>
-  <div id="clouds"></div>
 </div>
 
-<!-- Welcome Card -->
+<!-- Welcome Screen -->
 <div id="welcome">
   <div class="card">
     <h1>Welcome to Spot The Fake</h1>
-    <p>Train your eye to detect AI-generated images and sharpen your observation skills.</p>
-    <input type="text" placeholder="Enter your nickname">
+    <p>Train your eye to spot AI-generated images. Enter your nickname to start!</p>
+    <input type="text" id="nickname" placeholder="Enter your nickname">
     <br>
     <button id="startBtn">Start Training</button>
-    <div class="tip-card" id="welcomeTip">Tip: Look closely at irregular textures and inconsistent lighting.</div>
   </div>
 </div>
 
-<!-- Training Slideshow -->
+<!-- Training Screen -->
 <div id="training">
-  <img src="" class="training-image" id="slideImage" alt="Training Image">
-  <div class="training-tip" id="slideTip"></div>
-  <div>
-    <button class="guess-btn" id="aiBtn">AI</button>
-    <button class="guess-btn" id="realBtn">Real</button>
+  <div class="card">
+    <h2 id="phaseTitle"></h2>
+    <div class="training-image" id="slideImage"></div>
+    <div class="dropdown-tip">Tip (click to see)
+      <div class="dropdown-content" id="slideTip"></div>
+    </div>
+    <div>
+      <button class="guess-btn" id="aiBtn">AI Image</button>
+      <button class="guess-btn" id="realBtn">Authentic Image</button>
+    </div>
+    <div class="accuracy-box" id="accuracyBox"></div>
   </div>
-  <div id="phaseMessage" style="margin-top:20px; color:#ccc; font-size:0.95rem;"></div>
 </div>
 
 <script>
 // Nickname & Start
 const startBtn = document.getElementById('startBtn');
-const nicknameInput = document.querySelector('input[type="text"]');
+const nicknameInput = document.getElementById('nickname');
 const welcomeDiv = document.getElementById('welcome');
 const trainingDiv = document.getElementById('training');
 const slideImage = document.getElementById('slideImage');
 const slideTip = document.getElementById('slideTip');
+const phaseTitle = document.getElementById('phaseTitle');
+const accuracyBox = document.getElementById('accuracyBox');
 const aiBtn = document.getElementById('aiBtn');
 const realBtn = document.getElementById('realBtn');
-const phaseMessage = document.getElementById('phaseMessage');
 
-let nickname = '';
+let nickname = "";
 let currentPhase = 1;
-let currentIndex = 0;
-let userResponses = [];
+let currentSet = 0;
+let userResponsesPhase1 = [];
+let userResponsesPhase2 = [];
 
-// Editable data: add images & tips here
+// Editable data: 2 phases x 5 sets
 const phaseData = {
-  1: [
-    { img:'/mnt/data/image1.png', tip:'Check for unnatural shadows.', isAI:true },
-    { img:'/mnt/data/image2.png', tip:'Look at the eyes and facial details.', isAI:false },
-    { img:'/mnt/data/image3.png', tip:'Textures can be inconsistent in AI images.', isAI:true }
+  1:[
+    {imgAI:'/mnt/data/image1.png', imgReal:'/mnt/data/image2.png', tip:'AI often struggles with realistic shadows and fine details.'},
+    {imgAI:'/mnt/data/image3.png', imgReal:'/mnt/data/image4.png', tip:'Look for unnatural textures or odd reflections.'},
+    {imgAI:'/mnt/data/image5.png', imgReal:'/mnt/data/image6.png', tip:'Check symmetry and repeated patterns.'},
+    {imgAI:'/mnt/data/image7.png', imgReal:'/mnt/data/image8.png', tip:'Zoom in for distorted elements or inconsistent lighting.'},
+    {imgAI:'/mnt/data/image9.png', imgReal:'/mnt/data/image10.png', tip:'Watch for warped text or background artifacts.'},
   ],
-  2: [
-    { img:'/mnt/data/image4.png', tip:'Notice reflections in glasses and water.', isAI:true },
-    { img:'/mnt/data/image5.png', tip:'Look at hair and small details.', isAI:false },
-    { img:'/mnt/data/image6.png', tip:'Check lighting consistency.', isAI:true }
+  2:[
+    {imgAI:'/mnt/data/image11.png', imgReal:'/mnt/data/image12.png', tip:'Focus on small details like eyes, hands, and hair.'},
+    {imgAI:'/mnt/data/image13.png', imgReal:'/mnt/data/image14.png', tip:'Notice reflections and shadows carefully.'},
+    {imgAI:'/mnt/data/image15.png', imgReal:'/mnt/data/image16.png', tip:'Check textures for consistency.'},
+    {imgAI:'/mnt/data/image17.png', imgReal:'/mnt/data/image18.png', tip:'Look at complex backgrounds for AI errors.'},
+    {imgAI:'/mnt/data/image19.png', imgReal:'/mnt/data/image20.png', tip:'Notice lighting differences across objects.'},
   ]
 };
 
-// Start Button
-startBtn.addEventListener('click', () => {
-  nickname = nicknameInput.value.trim();
-  if(!nickname) return alert('Please enter your nickname!');
-  localStorage.setItem('nickname', nickname);
-  welcomeDiv.classList.add('fade-out');
-  setTimeout(() => {
-    welcomeDiv.style.display = 'none';
-    trainingDiv.style.display = 'flex';
-    currentPhase = 1;
-    currentIndex = 0;
-    userResponses = [];
-    showSlide();
-    phaseMessage.innerText = `Phase ${currentPhase} of 2`;
-  }, 800);
-});
+// Start Training
+startBtn.onclick = () => {
+  nickname = nicknameInput.value.trim() || "Participant";
+  welcomeDiv.style.display = "none";
+  trainingDiv.style.display = "flex";
+  currentPhase = 1;
+  currentSet = 0;
+  userResponsesPhase1 = [];
+  userResponsesPhase2 = [];
+  loadSet();
+};
 
-// Show slide
-function showSlide(){
-  const data = phaseData[currentPhase];
-  slideImage.src = data[currentIndex].img;
-  slideTip.innerHTML = `<div class="dropdown-tip">Tip (click to see)<div class="dropdown-content">${data[currentIndex].tip}</div></div>`;
-  addDropdownListener();
+// Load set
+function loadSet(){
+  phaseTitle.innerText = `Phase ${currentPhase} – Set ${currentSet+1} of 5`;
+  slideTip.innerText = '';
+  const set = phaseData[currentPhase][currentSet];
+  // Randomize which side AI goes
+  if(Math.random()<0.5){
+    slideImage.innerHTML = `<img src="${set.imgAI}" id="leftImg" style="width:45%; margin:5px;"><img src="${set.imgReal}" id="rightImg" style="width:45%; margin:5px;">`;
+    leftIsAI = true;
+  } else {
+    slideImage.innerHTML = `<img src="${set.imgReal}" id="leftImg" style="width:45%; margin:5px;"><img src="${set.imgAI}" id="rightImg" style="width:45%; margin:5px;">`;
+    leftIsAI = false;
+  }
 }
+
+let leftIsAI = true;
+
+function revealTip(correct){
+  const set = phaseData[currentPhase][currentSet];
+  slideTip.innerText = `${correct ? "Correct! " : "Not quite. "} Tip: ${set.tip}`;
+}
+
+function handleChoice(isAISelected){
+  const correct = (leftIsAI && isAISelected) || (!leftIsAI && !isAISelected);
+  revealTip(correct);
+  if(currentPhase===1) userResponsesPhase1.push(correct);
+  else userResponsesPhase2.push(correct);
+  currentSet++;
+  if(currentSet<5){
+    setTimeout(loadSet, 1500);
+  } else {
+    if(currentPhase===1){
+      currentPhase = 2;
+      currentSet = 0;
+      setTimeout(loadSet,1500);
+    } else {
+      showResults();
+    }
+  }
+}
+
+function showResults(){
+  const acc1 = Math.round(userResponsesPhase1.filter(r=>r).length/5*100);
+  const acc2 = Math.round(userResponsesPhase2.filter(r=>r).length/5*100);
+  trainingDiv.innerHTML = `<div class="card"><h2>Training Complete!</h2><p>${nickname}, here are your results:</p>
+  <p>Phase 1 Accuracy: ${acc1}%</p>
+  <p>Phase 2 Accuracy: ${acc2}%</p>
+  <p>Improvement: ${acc2-acc1}%</p></div>`;
+}
+
+aiBtn.onclick = ()=>handleChoice(true);
+realBtn.onclick = ()=>handleChoice(false);
 
 // Dropdown tip toggle
-function addDropdownListener(){
-  const dropdown = document.querySelector('.dropdown-tip');
-  const content = dropdown.querySelector('.dropdown-content');
-  dropdown.onclick = () => {
-    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+document.addEventListener('click', e=>{
+  if(e.target.classList.contains('dropdown-tip')){
+    const content = e.target.querySelector('.dropdown-content');
+    if(content) content.style.display = content.style.display==='block'?'none':'block';
   }
-}
-
-// Handle guess
-function handleGuess(isAISelected){
-  const data = phaseData[currentPhase];
-  const correct = data[currentIndex].isAI === isAISelected;
-  userResponses.push(correct);
-  currentIndex++;
-  if(currentIndex >= data.length){
-    const accuracy = Math.round(userResponses.filter(r=>r).length / userResponses.length * 100);
-    if(currentPhase < 2){
-      alert(`Phase ${currentPhase} complete! Accuracy: ${accuracy}%`);
-      currentPhase++;
-      currentIndex = 0;
-      userResponses = [];
-      phaseMessage.innerText = `Phase ${currentPhase} of 2`;
-      showSlide();
-    } else {
-      alert(`Phase ${currentPhase} complete! Accuracy: ${accuracy}%\nTraining Complete!`);
-      trainingDiv.innerHTML = `<h2 style="color:#fff;">Well done ${nickname}! You completed all phases.</h2>`;
-    }
-  } else {
-    showSlide();
-  }
-}
-
-aiBtn.addEventListener('click', ()=>handleGuess(true));
-realBtn.addEventListener('click', ()=>handleGuess(false));
+});
 </script>
-
 </body>
 </html>
