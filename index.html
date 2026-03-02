@@ -1,41 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Spot the AI</title>
 <style>
-body {
+/* Reset & body */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
   font-family: 'Segoe UI', sans-serif;
   background: #f4f6f9;
-  margin: 0;
-  display: flex;
-  justify-content: center;
 }
 
+/* Fullscreen welcome page */
+#welcomePage {
+  background: url('https://i.pinimg.com/1200x/e9/c3/80/e9c380cc63539a5c3b0867834f5c6887.jpg') no-repeat center center/cover;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Overlay for subtle dimming */
+#welcomePage::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+}
+
+/* Welcome content card */
+.welcome-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  padding: 30px 40px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 16px;
+  backdrop-filter: blur(4px);
+}
+
+.welcome-content h1 {
+  font-size: 3em;
+  margin-bottom: 15px;
+}
+
+.welcome-content p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+
+/* Buttons */
+button {
+  padding: 12px 28px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  background: #4a90e2;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #357abd;
+  transform: scale(1.05);
+}
+
+/* Shooting star */
+.shooting-star {
+  position: absolute;
+  top: -50px;
+  left: -100px;
+  width: 3px;
+  height: 80px;
+  background: linear-gradient(45deg, white, rgba(255,255,255,0));
+  transform: rotate(45deg);
+  animation: shoot 3s linear infinite;
+}
+
+@keyframes shoot {
+  0% {
+    transform: translate(0, 0) rotate(45deg);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  100% {
+    transform: translate(120vw, 120vh) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* Modern nickname input card */
+#nicknameCard {
+  display: none;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 40px 30px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  z-index: 3;
+}
+
+#nicknameCard h2 {
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+#nicknameCard input[type="text"] {
+  width: 80%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+#nicknameCard button {
+  width: 60%;
+}
+
+/* Game container */
 .container {
   width: 90%;
   max-width: 900px;
-  margin-top: 40px;
+  margin: 40px auto;
   background: white;
   padding: 30px;
   border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  display: none;
 }
 
 h1, h2 {
   text-align: center;
   color: #2c3e50;
-}
-
-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background: #4a90e2;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 15px;
 }
 
 button:hover {
@@ -77,49 +188,72 @@ button:hover {
 }
 </style>
 </head>
-
 <body>
-<div class="container">
 
-<div id="welcome">
-  <h1>Can You Spot the AI?</h1>
-  <input type="text" id="nickname" placeholder="Enter your nickname"><br><br>
+<!-- Welcome Page -->
+<div id="welcomePage">
+  <div class="welcome-content">
+    <h1>Welcome to Spot the AI</h1>
+    <p>Test your skills at identifying AI-generated images. Click below when you're ready!</p>
+    <button onclick="showNicknameCard()">I'm Ready</button>
+  </div>
+  <div class="shooting-star"></div>
+</div>
+
+<!-- Nickname input card -->
+<div id="nicknameCard">
+  <h2>Enter Your Nickname</h2>
+  <input type="text" id="nickname" placeholder="Nickname"><br>
   <label>How confident are you? (1-100%)</label><br>
   <input type="range" id="confidence" min="1" max="100" value="50">
-  <p id="confidenceValue">50%</p>
+  <p id="confidenceValue">50%</p><br>
   <button onclick="startPhase()">Start</button>
 </div>
 
-<div id="game" class="hidden">
-  <h2 id="phaseTitle"></h2>
-  <div class="progress" id="roundInfo"></div>
-  <div class="images">
-    <img id="img1" onclick="selectImage(0)">
-    <img id="img2" onclick="selectImage(1)">
+<!-- Main Game Container -->
+<div class="container" id="gameContainer">
+  <div id="game" class="hidden">
+    <h2 id="phaseTitle"></h2>
+    <div class="progress" id="roundInfo"></div>
+    <div class="images">
+      <img id="img1" onclick="selectImage(0)">
+      <img id="img2" onclick="selectImage(1)">
+    </div>
+    <div id="feedback" class="tip hidden"></div>
+    <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
   </div>
-  <div id="feedback" class="tip hidden"></div>
-  <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
-</div>
 
-<div id="results" class="hidden">
-  <h2>Results</h2>
-  <p id="resultText"></p>
-  <h3>Final Survey</h3>
-  <label>How confident are you now? (1-100%)</label><br>
-  <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
-  <label>How helpful was this site? (1-5)</label><br>
-  <input type="number" id="rating" min="1" max="5"><br>
-  <button onclick="finish()">Submit</button>
-</div>
+  <div id="results" class="hidden">
+    <h2>Results</h2>
+    <p id="resultText"></p>
+    <h3>Final Survey</h3>
+    <label>How confident are you now? (1-100%)</label><br>
+    <input type="range" id="finalConfidence" min="1" max="100" value="50"><br><br>
+    <label>How helpful was this site? (1-5)</label><br>
+    <input type="number" id="rating" min="1" max="5"><br>
+    <button onclick="finish()">Submit</button>
+  </div>
 
-<div id="thankyou" class="hidden">
-  <h2>Thank You!</h2>
-  <p>We hope you've become more confident at spotting AI-generated images.</p>
-</div>
-
+  <div id="thankyou" class="hidden">
+    <h2>Thank You!</h2>
+    <p>We hope you've become more confident at spotting AI-generated images.</p>
+  </div>
 </div>
 
 <script>
+/* Shooting star handled by CSS animation */
+
+function showNicknameCard(){
+  document.getElementById('welcomePage').style.display = 'none';
+  document.getElementById('nicknameCard').style.display = 'block';
+}
+
+/* Range slider display */
+document.getElementById("confidence").oninput = function(){
+  document.getElementById("confidenceValue").innerText = this.value + "%";
+};
+
+/* Game Logic */
 const rounds = [
   {images:["https://via.placeholder.com/400","https://via.placeholder.com/400"],
    correct:0,
@@ -144,13 +278,10 @@ let score1 = 0;
 let score2 = 0;
 let nickname = "";
 
-document.getElementById("confidence").oninput = function(){
-  document.getElementById("confidenceValue").innerText = this.value + "%";
-};
-
 function startPhase(){
-  nickname = document.getElementById("nickname").value;
-  document.getElementById("welcome").classList.add("hidden");
+  nickname = document.getElementById("nickname").value || "Player";
+  document.getElementById('nicknameCard').style.display = 'none';
+  document.getElementById('gameContainer').style.display = 'block';
   document.getElementById("game").classList.remove("hidden");
   loadRound();
 }
