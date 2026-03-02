@@ -92,13 +92,8 @@ button:hover {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* ---------------- NICKNAME CARD ---------------- */
-#nicknameCard {
-  display: none;
-  position: absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%, -50%);
+/* ---------------- CARD STYLE FOR PAGES ---------------- */
+.card {
   background: #fffbee;
   padding: 40px 35px;
   border-radius: 16px;
@@ -106,29 +101,24 @@ button:hover {
   width: 90%;
   text-align: center;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  border: 2px solid #fff;
+  position: relative;
   z-index: 3;
   opacity: 0;
   transition: opacity 0.6s ease;
 }
 
-#nicknameCard.show { opacity: 1; }
+.card.show { opacity: 1; }
 
-#nicknameCard h2 {
+.card h2 {
   margin-bottom: 25px;
   color: #2c3e50;
   font-weight: 700;
 }
 
-#nicknameCard input[type="text"] {
-  width: 85%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 25px;
-  font-size: 17px;
-}
-
-#nicknameCard select {
+.card input[type="text"],
+.card select,
+.card input[type="number"] {
   width: 85%;
   padding: 12px;
   border-radius: 10px;
@@ -139,21 +129,11 @@ button:hover {
   cursor: pointer;
 }
 
-#nicknameCard select option {
-  font-family: 'Playfair Display', serif;
-}
-
 /* ---------------- GAME CONTAINER ---------------- */
 .container {
   width: 90%;
   max-width: 900px;
   margin: 40px auto;
-  background: #fffbee;
-  padding: 30px;
-  border-radius: 16px;
-  border: 6px solid #fdfdfd;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
-  color: #2c3e50;
   display: none;
 }
 
@@ -174,7 +154,18 @@ h1, h2 {
   border-radius: 12px;
   cursor: pointer;
   border: 3px solid transparent;
-  transition: 0.3s ease, box-shadow 0.3s ease;
+  transition: 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 1;
+}
+
+.images img.fade-out {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.images img.fade-in {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .images img:hover {
@@ -220,7 +211,7 @@ h1, h2 {
 @media (max-width: 600px) {
   .images { flex-direction: column; gap: 15px; }
   .images img { width: 100%; }
-  .welcome-content, #nicknameCard, .container { padding: 25px 20px; }
+  .welcome-content, .card, .container { padding: 25px 20px; }
   button { font-size: 16px; }
 }
 </style>
@@ -242,7 +233,7 @@ h1, h2 {
 </div>
 
 <!-- Nickname Card -->
-<div id="nicknameCard">
+<div id="nicknameCard" class="card">
   <h2>Let's Get Started</h2>
   <input type="text" id="nickname" placeholder="Enter your nickname"><br>
   <label for="confidenceSelect">How confident are you in spotting AI-generated images?</label><br>
@@ -257,7 +248,7 @@ h1, h2 {
 
 <!-- Game Container -->
 <div class="container" id="gameContainer">
-  <div id="game" class="hidden">
+  <div id="game" class="card hidden">
     <h2 id="phaseTitle"></h2>
     <div class="progress">
       <div id="progressBar"></div>
@@ -270,7 +261,7 @@ h1, h2 {
     <button id="nextBtn" class="hidden" onclick="nextRound()">Next</button>
   </div>
 
-  <div id="results" class="hidden">
+  <div id="results" class="card hidden">
     <h2>Congrats on Completion!</h2>
     <p id="resultText"></p>
     <h3>Final Survey</h3>
@@ -286,7 +277,7 @@ h1, h2 {
     <button onclick="finish()">Submit</button>
   </div>
 
-  <div id="thankyou" class="hidden">
+  <div id="thankyou" class="card hidden">
     <h2>Thank You!</h2>
     <p>We hope you've become more confident at spotting AI-generated images.</p>
   </div>
@@ -334,10 +325,21 @@ function loadRound(){
   progress.style.width = ((currentRound+1)/rounds.length)*100 + "%";
 
   const imgs = [document.getElementById("img1"), document.getElementById("img2")];
-  imgs.forEach(img => img.classList.remove('selected'));
 
-  document.getElementById("img1").src = rounds[currentRound].images[0];
-  document.getElementById("img2").src = rounds[currentRound].images[1];
+  // Slide/fade transition
+  imgs.forEach(img => {
+    img.classList.add('fade-out');
+  });
+
+  setTimeout(() => {
+    imgs[0].src = rounds[currentRound].images[0];
+    imgs[1].src = rounds[currentRound].images[1];
+    imgs.forEach(img => {
+      img.classList.remove('fade-out');
+      img.classList.add('fade-in');
+      setTimeout(() => img.classList.remove('fade-in'), 300);
+    });
+  }, 300);
 }
 
 function selectImage(choice){
